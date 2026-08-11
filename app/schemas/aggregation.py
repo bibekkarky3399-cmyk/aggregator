@@ -112,8 +112,21 @@ class BalanceRequest(BaseModel):
 
 
 class ReserveRequest(BaseModel):
-    flight_id: str = Field(..., description="FlightId from availability response")
+    flight_id: str = Field(..., description="FlightId / offer_id / Yeti flight_fare_id from availability")
     return_flight_id: str | None = None
+    # Yeti B2B (and similar) need sector/date to re-select the fare server-side
+    origin: str | None = Field(default=None, description="Origin IATA")
+    destination: str | None = None
+    departure_date: str | None = Field(default=None, description="YYYY-MM-DD")
+    flight_number: str | None = Field(default=None, description="e.g. 673 or YT673")
+    fare_code: str | None = Field(default=None, description="e.g. E1")
+    adults: int = Field(default=1, ge=1, le=60)
+    currency: str = Field(default="NPR")
+    group_name: str | None = "AGG"
+    contact_name: str | None = None
+    contact_email: str | None = None
+    contact_mobile: str | None = None
+    passengers: list[dict[str, Any]] = Field(default_factory=list)
     providers: list[str] | None = None
 
 

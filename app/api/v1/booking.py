@@ -75,6 +75,18 @@ async def reserve(
         payload={
             "flight_id": body.flight_id,
             "return_flight_id": body.return_flight_id,
+            "origin": body.origin,
+            "destination": body.destination,
+            "departure_date": body.departure_date,
+            "flight_number": body.flight_number,
+            "fare_code": body.fare_code,
+            "adults": body.adults,
+            "currency": body.currency,
+            "group_name": body.group_name,
+            "contact_name": body.contact_name,
+            "contact_email": body.contact_email,
+            "contact_mobile": body.contact_mobile,
+            "passengers": body.passengers,
         },
         slugs=body.providers,
     )

@@ -8,24 +8,12 @@ import httpx
 
 from app.adapters.base import ProviderAdapter
 from app.adapters.http_adapter import GenericHttpAdapter
-from app.adapters.mock_airlines import (
-    MockBuddhaAirAdapter,
-    MockNepalBookingAdapter,
-    MockShreeAirlinesAdapter,
-    MockYetiAirlinesAdapter,
-)
 from app.models.provider import Provider
 
 _REGISTRY: dict[str, Type[ProviderAdapter]] = {
     "generic": GenericHttpAdapter,
-    "mock_buddha_air": MockBuddhaAirAdapter,
-    "mock_yeti_airlines": MockYetiAirlinesAdapter,
-    "mock_shree_airlines": MockShreeAirlinesAdapter,
-    "mock_nepal_booking": MockNepalBookingAdapter,
-    # Legacy keys kept so older DB rows keep working
-    "mock_united_solutions": MockNepalBookingAdapter,
-    "mock_skywings": MockBuddhaAirAdapter,
-    "mock_aerolink": MockYetiAirlinesAdapter,
+    # Legacy keys — all route to config-driven SOAP/HTTP
+    "united_solutions": GenericHttpAdapter,
 }
 
 
@@ -44,6 +32,4 @@ def create_adapter(
 ) -> ProviderAdapter:
     key = (provider.adapter_key or "generic").lower()
     adapter_cls = _REGISTRY.get(key, GenericHttpAdapter)
-    if adapter_cls is GenericHttpAdapter:
-        return GenericHttpAdapter(provider, client=client)
-    return adapter_cls(provider)
+    return adapter_cls(provider, client=client)

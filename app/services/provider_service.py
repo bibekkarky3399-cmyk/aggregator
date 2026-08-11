@@ -118,13 +118,17 @@ class ProviderService:
                     if len(preview_str) > 2000:
                         preview = {"truncated": preview_str[:2000]}
 
+            message = "Connectivity OK" if result.success else (result.error or "Connectivity failed")
+            if result.success and isinstance(result.raw, dict) and result.raw.get("note"):
+                message = str(result.raw["note"])
+
             return ConnectivityTestResponse(
                 success=result.success,
                 provider_id=provider.id,
                 provider_name=provider.name,
                 status_code=result.status_code,
                 latency_ms=result.latency_ms,
-                message="Connectivity OK" if result.success else (result.error or "Connectivity failed"),
+                message=message,
                 sample_normalized=(
                     result.offers[0].model_dump() if result.offers else None
                 ),

@@ -31,6 +31,15 @@ class Settings(BaseSettings):
     admin_email: str = "admin@example.com"
     admin_password: str = "admin123"
 
+    # United Solutions SOAP (BookingAPI Group) — synced into us-* providers on startup
+    us_endpoint: str = "http://dev.usbooking.org/us/UnitedSolutions"
+    us_user_id: str = ""
+    us_password: str = ""
+    us_agency_id: str = ""
+    us_client_ip: str = ""
+    us_timeout_seconds: float = 90.0
+    us_auto_enable: bool = True
+
 
 @lru_cache
 def get_settings() -> Settings:
