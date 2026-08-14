@@ -3,6 +3,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.api.deps import require_api_access
 from app.database import get_db
 from app.models.provider import ApiType
 from app.schemas.aggregation import (
@@ -15,6 +16,7 @@ from app.schemas.aggregation import (
     ReserveRequest,
     SalesReportRequest,
 )
+from app.services.api_key_service import ApiPrincipal
 from app.services.provider_service import ProviderService
 
 router = APIRouter(prefix="/booking", tags=["Nepal Booking"])
@@ -36,7 +38,10 @@ async def _run(
 
 
 @router.get("/sectors", response_model=AggregateOperationResponse)
-async def sector_codes(db: AsyncSession = Depends(get_db)) -> AggregateOperationResponse:
+async def sector_codes(
+    db: AsyncSession = Depends(get_db),
+    _: ApiPrincipal = Depends(require_api_access(ApiType.SECTOR_CODES)),
+) -> AggregateOperationResponse:
     """Aggregate Nepal domestic airport/sector lists from enabled providers."""
     return await _run(
         db,
@@ -51,6 +56,7 @@ async def sector_codes(db: AsyncSession = Depends(get_db)) -> AggregateOperation
 async def check_balance(
     body: BalanceRequest,
     db: AsyncSession = Depends(get_db),
+    _: ApiPrincipal = Depends(require_api_access(ApiType.AGENCY_BALANCE)),
 ) -> AggregateOperationResponse:
     """Aggregate agency credit balances for Nepal airlines."""
     return await _run(
@@ -66,6 +72,7 @@ async def check_balance(
 async def reserve(
     body: ReserveRequest,
     db: AsyncSession = Depends(get_db),
+    _: ApiPrincipal = Depends(require_api_access(ApiType.FLIGHT_RESERVATION)),
 ) -> AggregateOperationResponse:
     """Hold seats; returns PNR + TTL (not persisted)."""
     return await _run(
@@ -96,6 +103,7 @@ async def reserve(
 async def issue_ticket(
     body: IssueTicketRequest,
     db: AsyncSession = Depends(get_db),
+    _: ApiPrincipal = Depends(require_api_access(ApiType.ISSUE_TICKET)),
 ) -> AggregateOperationResponse:
     """Confirm payment and issue tickets before hold TTL expires."""
     return await _run(
@@ -111,6 +119,7 @@ async def issue_ticket(
 async def get_itinerary(
     body: ItineraryRequest,
     db: AsyncSession = Depends(get_db),
+    _: ApiPrincipal = Depends(require_api_access(ApiType.GET_ITINERARY)),
 ) -> AggregateOperationResponse:
     """Fetch PNR / ticket itinerary details."""
     return await _run(
@@ -126,6 +135,7 @@ async def get_itinerary(
 async def flight_detail(
     body: FlightDetailRequest,
     db: AsyncSession = Depends(get_db),
+    _: ApiPrincipal = Depends(require_api_access(ApiType.FLIGHT_DETAIL)),
 ) -> AggregateOperationResponse:
     """Lookup Nepal domestic flight details by FlightId."""
     return await _run(
@@ -141,6 +151,7 @@ async def flight_detail(
 async def pnr_detail(
     body: PnrDetailRequest,
     db: AsyncSession = Depends(get_db),
+    _: ApiPrincipal = Depends(require_api_access(ApiType.PNR_DETAIL)),
 ) -> AggregateOperationResponse:
     """PNR maintenance URL / detail for reschedule or cancel."""
     return await _run(
@@ -156,6 +167,7 @@ async def pnr_detail(
 async def sales_report(
     body: SalesReportRequest,
     db: AsyncSession = Depends(get_db),
+    _: ApiPrincipal = Depends(require_api_access(ApiType.SALES_REPORT)),
 ) -> AggregateOperationResponse:
     """Aggregate agency sales report for a date range."""
     return await _run(

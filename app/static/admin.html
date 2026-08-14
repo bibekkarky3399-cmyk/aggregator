@@ -6,7 +6,7 @@
   <title>Sky Nepal · Aggregation Console</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
   <style>
     :root {
@@ -379,17 +379,17 @@
       display: block; font-size: .68rem; font-weight: 800; color: var(--mute);
       text-transform: uppercase; letter-spacing: .06em; margin-bottom: .32rem;
     }
-    .field input, .field select,
+    .field input, .field select, .field textarea,
     .form input, .form select, .form textarea {
       width: 100%; height: 40px; border: 1px solid var(--line); background: #fff;
       border-radius: 10px; padding: 0 .75rem; outline: none;
       transition: border-color .15s, box-shadow .15s;
     }
-    .form textarea {
+    .field textarea, .form textarea {
       height: auto; min-height: 88px; padding: .65rem .75rem;
-      font-family: var(--mono); font-size: .78rem; line-height: 1.45;
+      font-family: inherit; font-size: .85rem; line-height: 1.45; resize: vertical;
     }
-    .field input:focus, .field select:focus,
+    .field input:focus, .field select:focus, .field textarea:focus,
     .form input:focus, .form select:focus, .form textarea:focus {
       border-color: #5eead4; box-shadow: 0 0 0 3px var(--accent-ring);
     }
@@ -978,6 +978,979 @@
 
     @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    @keyframes learnFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes learnWiggle {
+      0%, 100% { transform: rotate(-3deg); }
+      50% { transform: rotate(3deg); }
+    }
+    @keyframes learnBounceIn {
+      0% { opacity: 0; transform: scale(.6) translateY(16px); }
+      60% { opacity: 1; transform: scale(1.06) translateY(-4px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    @keyframes learnReveal {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes learnCloud {
+      from { transform: translateX(-8px); }
+      to { transform: translateX(8px); }
+    }
+    @keyframes learnPacketMove {
+      0% { opacity: 0; transform: translate(0, 0) scale(.7) rotate(-8deg); }
+      12% { opacity: 1; }
+      88% { opacity: 1; }
+      100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1) rotate(8deg); }
+    }
+    @keyframes learnStamp {
+      0% { opacity: 0; transform: scale(1.4) rotate(-12deg); }
+      100% { opacity: 1; transform: scale(1) rotate(-4deg); }
+    }
+    @keyframes learnPulseSoft {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(15, 118, 110, .28); }
+      50% { box-shadow: 0 0 0 12px rgba(15, 118, 110, 0); }
+    }
+
+    /* ——— Learn (storybook) ——— */
+    .content.learn-wide { max-width: 1120px; }
+    #panel-learn {
+      --learn-font: "Nunito", "Plus Jakarta Sans", system-ui, sans-serif;
+      font-family: var(--learn-font);
+    }
+    #panel-learn .page-head h1 {
+      font-family: var(--learn-font);
+      font-size: clamp(1.6rem, 3vw, 2.1rem);
+      letter-spacing: -.03em;
+    }
+    #panel-learn .page-head p { font-size: .98rem; max-width: 48ch; }
+
+    .learn-shell {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 1.15rem;
+      align-items: start;
+    }
+    .learn-rail {
+      position: sticky; top: calc(var(--header) + 1rem);
+      background: #fff;
+      border: 2px solid #d7e5e3;
+      border-radius: 22px;
+      box-shadow: 0 10px 28px rgba(15, 118, 110, .08);
+      padding: 1rem .8rem 1.1rem;
+    }
+    .learn-rail h3 {
+      margin: 0 .4rem .7rem;
+      font-size: .78rem; font-weight: 800;
+      color: #0f766e; letter-spacing: .02em;
+    }
+    .learn-guide-mini {
+      display: flex; gap: .55rem; align-items: center;
+      margin: 0 .25rem .9rem; padding: .55rem .6rem;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #ecfdf8, #f0f9ff);
+      border: 1px solid #c7ece7;
+    }
+    .learn-guide-mini .face {
+      width: 42px; height: 42px; border-radius: 14px;
+      background: linear-gradient(160deg, #5eead4, #0f766e);
+      display: grid; place-items: center;
+      box-shadow: 0 6px 14px rgba(15,118,110,.25);
+      animation: learnFloat 3s ease-in-out infinite;
+    }
+    .learn-guide-mini .face svg { width: 26px; height: 26px; }
+    .learn-guide-mini strong { display: block; font-size: .82rem; color: var(--ink); }
+    .learn-guide-mini span { display: block; font-size: .72rem; color: #64748b; font-weight: 650; }
+
+    .learn-chapters { display: flex; flex-direction: column; gap: .4rem; }
+    .learn-chapters button {
+      display: grid; grid-template-columns: 36px 1fr; gap: .55rem; align-items: center;
+      text-align: left; width: 100%;
+      padding: .55rem .6rem;
+      border-radius: 14px;
+      border: 2px solid transparent;
+      background: transparent;
+      color: #64748b;
+      font-family: var(--learn-font);
+    }
+    .learn-chapters button:hover { background: #f0fdfa; color: var(--ink); }
+    .learn-chapters button.active {
+      background: #ecfdf8;
+      border-color: #99f6e4;
+      color: var(--ink);
+    }
+    .learn-chapters button .n {
+      width: 36px; height: 36px; border-radius: 12px;
+      display: grid; place-items: center;
+      font-size: 1rem; font-weight: 800;
+      background: #f1f5f9;
+    }
+    .learn-chapters button.active .n { background: #ccfbf1; }
+    .learn-chapters button.done .n { background: #d1fae5; }
+    .learn-chapters button strong {
+      display: block; font-size: .84rem; font-weight: 800; line-height: 1.2;
+    }
+    .learn-chapters button .sub {
+      display: block; margin-top: .1rem; font-size: .7rem; font-weight: 650; color: #94a3b8;
+    }
+    .learn-progress {
+      margin: 1rem .35rem 0;
+      height: 10px; border-radius: 99px; background: #e2e8f0; overflow: hidden;
+      border: 2px solid #e2e8f0;
+    }
+    .learn-progress > i {
+      display: block; height: 100%; width: 0;
+      background: linear-gradient(90deg, #5eead4, #0f766e);
+      border-radius: 99px;
+      transition: width .45s var(--ease);
+    }
+    .learn-progress-label {
+      margin: .45rem .35rem 0;
+      font-size: .75rem; font-weight: 750; color: #0f766e;
+    }
+
+    .learn-stage { min-width: 0; display: flex; flex-direction: column; gap: 1rem; }
+    .learn-hero {
+      position: relative; overflow: hidden;
+      border-radius: 28px;
+      padding: 1.35rem 1.4rem 1.25rem;
+      color: #0b1220;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(255,255,255,.85), transparent 40%),
+        radial-gradient(circle at 88% 18%, rgba(94, 234, 212, .45), transparent 42%),
+        linear-gradient(160deg, #dff7f3 0%, #e8f4ff 48%, #d9f3ee 100%);
+      border: 2px solid #b6e7df;
+      box-shadow: 0 12px 32px rgba(15, 118, 110, .1);
+    }
+    .learn-hero .clouds {
+      position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+    }
+    .learn-hero .cloud {
+      position: absolute; border-radius: 999px;
+      background: rgba(255,255,255,.55);
+      animation: learnCloud 6s ease-in-out infinite alternate;
+    }
+    .learn-hero .cloud.c1 { width: 90px; height: 28px; top: 18%; right: 12%; }
+    .learn-hero .cloud.c2 { width: 60px; height: 20px; top: 55%; right: 28%; animation-duration: 8s; }
+    .learn-hero .eyebrow {
+      position: relative;
+      display: inline-flex; align-items: center; gap: .35rem;
+      font-size: .78rem; font-weight: 800; color: #0f766e;
+      background: rgba(255,255,255,.7);
+      border: 1px solid #99f6e4;
+      border-radius: 999px;
+      padding: .28rem .7rem;
+      margin: 0 0 .7rem;
+    }
+    .learn-hero h2 {
+      position: relative; margin: 0;
+      font-size: clamp(1.45rem, 2.8vw, 2rem); font-weight: 800;
+      letter-spacing: -.03em; line-height: 1.15; max-width: 18ch;
+    }
+    .learn-hero p {
+      position: relative; margin: .55rem 0 0;
+      color: #334155; font-size: 1.02rem; line-height: 1.5; max-width: 42ch; font-weight: 650;
+    }
+    .learn-hero-actions {
+      position: relative; margin-top: 1rem;
+      display: flex; flex-wrap: wrap; gap: .5rem; align-items: center;
+    }
+    .learn-hero-actions .btn-play {
+      background: linear-gradient(180deg, #14b8a6, #0f766e);
+      color: #fff; border-radius: 999px;
+      padding: .7rem 1.2rem; font-weight: 800; font-size: .95rem;
+      box-shadow: 0 8px 20px rgba(15,118,110,.28);
+      font-family: var(--learn-font);
+    }
+    .learn-hero-actions .btn-play:hover { transform: translateY(-2px) scale(1.02); }
+    .learn-hero-actions .btn-ghost-light {
+      background: rgba(255,255,255,.75); color: #0f766e;
+      border: 2px solid #99f6e4; border-radius: 999px;
+      font-weight: 800; font-family: var(--learn-font);
+    }
+
+    .learn-board {
+      background: #fff;
+      border: 2px solid #d7e5e3;
+      border-radius: 26px;
+      box-shadow: 0 10px 28px rgba(15, 118, 110, .07);
+      overflow: hidden;
+    }
+    .learn-board-h {
+      display: flex; justify-content: space-between; gap: .75rem; align-items: center;
+      padding: .9rem 1.15rem;
+      border-bottom: 2px dashed #e2e8f0;
+      background: linear-gradient(180deg, #f7fffd, #f4faf9);
+    }
+    .learn-board-h strong { font-size: .95rem; font-weight: 800; }
+    .learn-board-h span {
+      font-size: .78rem; color: #0f766e; font-weight: 750;
+      background: #ecfdf8; border-radius: 999px; padding: .25rem .65rem;
+    }
+    .learn-canvas {
+      position: relative;
+      min-height: 340px;
+      padding: 1.4rem 1.2rem 1.6rem;
+      background:
+        radial-gradient(ellipse 80% 55% at 50% 110%, rgba(13,148,136,.1), transparent 70%),
+        repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(148,163,184,.08) 28px),
+        linear-gradient(180deg, #fff 0%, #f8fffc 100%);
+    }
+    .learn-scene { display: none; min-height: 300px; }
+    .learn-scene.active { display: block; animation: learnReveal .45s var(--ease); }
+
+    .learn-story-row {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      gap: .6rem; flex-wrap: wrap; position: relative; z-index: 1;
+      min-height: 220px;
+    }
+    .learn-char {
+      flex: 1; min-width: 110px; max-width: 150px;
+      text-align: center;
+      transition: transform .35s var(--ease), filter .35s;
+    }
+    .learn-char .bubble-face {
+      width: 78px; height: 78px; margin: 0 auto .55rem;
+      border-radius: 24px;
+      display: grid; place-items: center;
+      border: 3px solid #fff;
+      box-shadow: 0 10px 22px rgba(15,23,42,.1);
+      background: #e2e8f0;
+      font-size: 2rem;
+      transition: transform .35s var(--ease), box-shadow .35s;
+    }
+    .learn-char strong { display: block; font-size: .9rem; font-weight: 800; color: var(--ink); }
+    .learn-char small { display: block; margin-top: .15rem; font-size: .72rem; color: #64748b; font-weight: 700; line-height: 1.3; }
+    .learn-char.hub .bubble-face {
+      background: linear-gradient(160deg, #5eead4, #0f766e);
+      animation: learnFloat 2.8s ease-in-out infinite;
+    }
+    .learn-char.lit .bubble-face {
+      transform: scale(1.08);
+      box-shadow: 0 0 0 6px var(--accent-ring), 0 12px 24px rgba(15,118,110,.2);
+      animation: learnPulseSoft 1.2s ease-out infinite;
+    }
+    .learn-char.you .bubble-face { background: linear-gradient(160deg, #fdba74, #f97316); }
+    .learn-char.p1 .bubble-face { background: linear-gradient(160deg, #93c5fd, #3b82f6); }
+    .learn-char.p2 .bubble-face { background: linear-gradient(160deg, #fcd34d, #d97706); }
+    .learn-char.p3 .bubble-face { background: linear-gradient(160deg, #86efac, #16a34a); }
+    .face-you {
+      position: relative;
+    }
+    .face-you .eye {
+      position: absolute; top: 28px; width: 8px; height: 8px; border-radius: 50%; background: #0b1220;
+    }
+    .face-you .eye:first-child { left: 24px; }
+    .face-you .eye:nth-child(2) { right: 24px; }
+    .face-you .smile {
+      position: absolute; bottom: 22px; left: 50%; width: 22px; height: 11px;
+      border: 3px solid #0b1220; border-top: 0; border-radius: 0 0 14px 14px;
+      transform: translateX(-50%);
+    }
+    .face-plane { position: relative; }
+    .face-plane::before {
+      content: ""; position: absolute; left: 14px; right: 14px; top: 34px; height: 10px;
+      background: rgba(255,255,255,.9); border-radius: 8px;
+    }
+    .face-plane .wing {
+      position: absolute; left: 18px; right: 18px; top: 28px; height: 6px;
+      background: rgba(11,18,32,.25); border-radius: 6px;
+    }
+    .face-shop { position: relative; }
+    .face-shop::before {
+      content: ""; position: absolute; left: 22px; right: 22px; top: 18px; bottom: 18px;
+      background: rgba(255,255,255,.55); border-radius: 8px;
+    }
+    .face-shop .door {
+      position: absolute; left: 50%; bottom: 18px; width: 14px; height: 20px;
+      background: rgba(11,18,32,.35); border-radius: 4px 4px 0 0;
+      transform: translateX(-50%);
+    }
+    .learn-mail-plane .mail-arrow {
+      display: inline-grid; place-items: center;
+      width: 48px; height: 48px; border-radius: 50%;
+      background: #ecfdf8; border: 2px solid #99f6e4;
+      color: #0f766e; font-size: 1.4rem; font-weight: 800;
+      animation: learnFloat 2s ease-in-out infinite;
+    }
+    .learn-stamp .ico {
+      width: 36px; height: 36px; border-radius: 12px;
+      background: #f1f5f9; position: relative;
+    }
+    .learn-stamp .ico-search::before {
+      content: ""; position: absolute; left: 10px; top: 10px; width: 12px; height: 12px;
+      border: 3px solid #0f766e; border-radius: 50%;
+    }
+    .learn-stamp .ico-search::after {
+      content: ""; position: absolute; right: 8px; bottom: 8px; width: 10px; height: 3px;
+      background: #0f766e; transform: rotate(45deg); border-radius: 2px;
+    }
+    .learn-stamp .ico-hold::before {
+      content: ""; position: absolute; inset: 10px 12px 12px;
+      border: 3px solid #0f766e; border-radius: 8px 8px 4px 4px;
+    }
+    .learn-stamp .ico-ticket::before {
+      content: ""; position: absolute; left: 8px; right: 8px; top: 12px; bottom: 12px;
+      background: #0f766e; border-radius: 4px;
+      opacity: .85;
+    }
+    .learn-stamp .ico-map::before {
+      content: ""; position: absolute; inset: 9px;
+      border: 3px solid #0f766e; border-radius: 4px;
+    }
+    .learn-stamp .ico-map::after {
+      content: ""; position: absolute; left: 16px; top: 12px; bottom: 12px; width: 3px;
+      background: #0f766e;
+    }
+
+    .learn-packet {
+      position: absolute; z-index: 3;
+      min-width: 52px; height: 36px; padding: 0 .45rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #fde68a, #f59e0b);
+      color: #78350f; font-size: .7rem; font-weight: 800;
+      display: grid; place-items: center;
+      box-shadow: 0 8px 18px rgba(245,158,11,.35);
+      border: 2px solid #fff;
+      opacity: 0; pointer-events: none;
+    }
+    .learn-packet.fly { animation: learnPacketMove 1.55s var(--ease) forwards; }
+
+    .learn-steps-kid {
+      display: grid; gap: .7rem; max-width: 560px; margin: 0 auto;
+    }
+    .learn-step-card {
+      display: grid; grid-template-columns: 56px 1fr; gap: .75rem; align-items: center;
+      border-radius: 18px; border: 2px solid #e2e8f0;
+      padding: .75rem .9rem;
+      background: #fff;
+      opacity: .3; transform: translateX(-12px);
+      transition: all .4s var(--ease);
+    }
+    .learn-step-card.show { opacity: 1; transform: none; }
+    .learn-step-card.lit-layer {
+      border-color: #5eead4;
+      background: #ecfdf8;
+      box-shadow: 0 8px 20px rgba(15,118,110,.12);
+      animation: learnBounceIn .45s var(--ease);
+    }
+    .learn-step-card .num {
+      width: 56px; height: 56px; border-radius: 16px;
+      display: grid; place-items: center;
+      font-size: 1.5rem; font-weight: 800;
+      background: #f1f5f9;
+    }
+    .learn-step-card strong { display: block; font-size: 1rem; font-weight: 800; }
+    .learn-step-card p { margin: .2rem 0 0; font-size: .85rem; color: #64748b; font-weight: 650; line-height: 1.4; }
+
+    .learn-mail {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: stretch;
+    }
+    .learn-mail-box {
+      border: 3px solid #cbd5e1;
+      border-radius: 22px;
+      background: #fff;
+      padding: 1rem;
+      min-height: 210px;
+      position: relative;
+      overflow: hidden;
+    }
+    .learn-mail-box.out { border-color: #fbbf24; background: linear-gradient(180deg, #fffbeb, #fff); }
+    .learn-mail-box.back { border-color: #5eead4; background: linear-gradient(180deg, #ecfdf8, #fff); }
+    .learn-mail-box h5 {
+      margin: 0 0 .65rem; font-size: .8rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: .04em; color: #64748b;
+    }
+    .learn-letter {
+      border-radius: 14px;
+      border: 2px dashed #94a3b8;
+      background: #fff;
+      padding: .85rem;
+      font-weight: 750; font-size: .92rem; line-height: 1.45; color: #0f172a;
+    }
+    .learn-letter .tiny {
+      display: block; margin-top: .55rem;
+      font-family: var(--mono); font-size: .68rem; font-weight: 500; color: #64748b;
+    }
+    .learn-mail-plane {
+      text-align: center; font-size: 2.2rem;
+      animation: learnFloat 2s ease-in-out infinite;
+      margin: .4rem 0;
+    }
+    @media (min-width: 800px) {
+      .learn-mail { grid-template-columns: 1fr 70px 1fr; align-items: center; }
+      .learn-mail-plane { margin: 0; }
+    }
+
+    .learn-soap-story {
+      display: grid; gap: 1rem; justify-items: center;
+    }
+    .learn-envelope {
+      width: min(100%, 340px);
+      height: 180px;
+      position: relative;
+      border-radius: 18px;
+      background: linear-gradient(160deg, #ccfbf1, #99f6e4);
+      border: 3px solid #5eead4;
+      box-shadow: 0 14px 30px rgba(15,118,110,.15);
+      overflow: hidden;
+      opacity: .45;
+      transition: opacity .4s;
+    }
+    .learn-envelope.open { opacity: 1; }
+    .learn-envelope .flap {
+      position: absolute; left: 0; right: 0; top: 0; height: 55%;
+      background: linear-gradient(180deg, #5eead4, #14b8a6);
+      clip-path: polygon(0 0, 50% 70%, 100% 0);
+      transform-origin: top center;
+      transition: transform .7s var(--ease);
+      z-index: 2;
+    }
+    .learn-envelope.open .flap { transform: translateY(-8%) scaleY(.15); opacity: .85; }
+    .learn-envelope .note {
+      position: absolute; left: 12%; right: 12%; bottom: 14%;
+      background: #fff; border-radius: 12px;
+      padding: .75rem .85rem;
+      border: 2px solid #e2e8f0;
+      font-weight: 750; font-size: .88rem; line-height: 1.4;
+      transform: translateY(20px); opacity: 0;
+      transition: all .5s .25s var(--ease);
+      z-index: 1;
+    }
+    .learn-envelope.open .note { transform: none; opacity: 1; }
+    .learn-soap-compare {
+      display: flex; flex-wrap: wrap; gap: .55rem; justify-content: center;
+    }
+    .learn-soap-compare span {
+      background: #fff; border: 2px solid #d7e5e3; border-radius: 999px;
+      padding: .4rem .8rem; font-size: .8rem; font-weight: 800; color: #334155;
+    }
+    .learn-soap-compare span.hi { background: #ecfdf8; border-color: #5eead4; color: #0f766e; }
+
+    .learn-adventure {
+      display: flex; flex-wrap: wrap; gap: .7rem; justify-content: center; align-items: center;
+      padding: .4rem 0 1rem;
+    }
+    .learn-stamp {
+      width: 110px; min-height: 110px;
+      border-radius: 18px;
+      border: 3px dashed #cbd5e1;
+      background: #fff;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: .25rem;
+      opacity: .35; transform: scale(.9);
+      transition: all .35s var(--ease);
+      font-weight: 800;
+    }
+    .learn-stamp small { font-size: .72rem; color: #64748b; font-weight: 750; text-align: center; padding: 0 .3rem; }
+    .learn-stamp.on {
+      opacity: 1; transform: none;
+      border-color: #14b8a6; background: #ecfdf8;
+      animation: learnStamp .4s var(--ease);
+    }
+    .learn-stamp.done-pill {
+      opacity: 1; border-style: solid; border-color: #6ee7b7; background: #d1fae5;
+    }
+    .learn-adv-arrow { font-size: 1.3rem; font-weight: 800; color: #cbd5e1; }
+    .learn-adv-arrow.on { color: #0f766e; }
+    .learn-adv-hero {
+      text-align: center; margin-top: .5rem;
+    }
+    .learn-adv-hero .plane {
+      width: 88px; height: 88px; margin: 0 auto .5rem;
+      border-radius: 28px;
+      background: linear-gradient(160deg, #5eead4, #0f766e);
+      display: grid; place-items: center;
+      box-shadow: 0 12px 28px rgba(15,118,110,.25);
+      animation: learnFloat 2.6s ease-in-out infinite;
+    }
+    .learn-adv-hero .plane svg { width: 48px; height: 48px; }
+    .learn-adv-hero strong { font-size: 1.05rem; }
+    .learn-adv-hero small { display: block; margin-top: .2rem; color: #0f766e; font-weight: 750; }
+
+    .learn-teach {
+      display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: start;
+      padding: 1.15rem 1.2rem 1.3rem;
+      border-top: 2px dashed #e2e8f0;
+      background: linear-gradient(180deg, #f7fffd, #f3faf8);
+    }
+    .learn-teach .coach { display: flex; gap: .85rem; align-items: flex-start; }
+    .learn-teach .ava-coach {
+      flex-shrink: 0;
+      width: 52px; height: 52px; border-radius: 18px;
+      background: linear-gradient(160deg, #5eead4, #0f766e);
+      color: #fff; display: grid; place-items: center;
+      box-shadow: 0 8px 18px rgba(15,118,110,.25);
+      animation: learnWiggle 3.5s ease-in-out infinite;
+    }
+    .learn-teach .ava-coach svg { width: 30px; height: 30px; }
+    .learn-teach h4 { margin: 0; font-size: 1.05rem; font-weight: 800; }
+    .learn-teach p { margin: .35rem 0 0; font-size: .95rem; color: #475569; line-height: 1.55; max-width: 58ch; font-weight: 650; }
+    .learn-teach .hint-line {
+      margin-top: .55rem;
+      font-size: .82rem; font-weight: 800; color: #0f766e;
+    }
+    .learn-nav-btns { display: flex; gap: .45rem; flex-wrap: wrap; justify-content: flex-end; }
+    .learn-nav-btns .btn {
+      border-radius: 999px; font-family: var(--learn-font); font-weight: 800;
+      padding: .55rem 1rem;
+    }
+
+    .learn-quiz {
+      margin-top: .85rem;
+      display: none;
+      grid-template-columns: 1fr; gap: .5rem;
+    }
+    .learn-quiz.show { display: grid; animation: fadeUp .3s var(--ease); }
+    .learn-quiz .q {
+      font-size: .88rem; font-weight: 800; color: var(--ink); margin-bottom: .15rem;
+    }
+    .learn-quiz button {
+      text-align: left; padding: .8rem .95rem;
+      border: 2px solid #e2e8f0; border-radius: 16px;
+      background: #fff; font-size: .9rem; font-weight: 750; color: var(--text);
+      font-family: var(--learn-font);
+    }
+    .learn-quiz button:hover { border-color: #5eead4; background: #ecfdf8; transform: translateY(-1px); }
+    .learn-quiz button.correct {
+      border-color: #6ee7b7; background: #d1fae5; color: var(--ok);
+    }
+    .learn-quiz button.wrong {
+      border-color: #fecdd3; background: #fff1f2; color: var(--bad);
+    }
+
+    @media (max-width: 900px) {
+      .learn-shell { grid-template-columns: 1fr; }
+      .learn-rail { position: static; }
+      .learn-chapters { display: grid; grid-template-columns: 1fr 1fr; }
+      .learn-teach { grid-template-columns: 1fr; }
+      .learn-nav-btns { justify-content: stretch; }
+      .learn-nav-btns .btn { flex: 1; }
+      .learn-mail { grid-template-columns: 1fr; }
+    }
+    .auth-layout {
+      display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+      gap: 1rem; align-items: start;
+    }
+    .auth-side { position: sticky; top: calc(var(--header) + 1rem); }
+    .settings-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: start;
+    }
+    .key-input-row { display: flex; gap: .45rem; align-items: center; }
+    .key-input-row input { flex: 1; min-width: 0; width: auto !important; font-family: var(--mono); font-size: .82rem; }
+    .key-input-row .btn { height: 40px; flex-shrink: 0; }
+    code.user-key-full {
+      display: block; font-family: var(--mono); font-size: .8rem; font-weight: 650;
+      word-break: break-all; line-height: 1.45;
+      background: #0b1220; color: #5eead4;
+      padding: .55rem .7rem; border-radius: 8px; border: 0;
+    }
+    .user-perm-cell { display: flex; flex-direction: column; align-items: flex-start; gap: .4rem; }
+    .user-key-apis { display: flex; flex-wrap: wrap; gap: .25rem; }
+    .user-row-actions { display: flex; flex-wrap: wrap; gap: .35rem; justify-content: flex-end; }
+    .btn-action-show {
+      background: #ecfeff; color: #0e7490; border: 1px solid #a5f3fc;
+    }
+    .btn-action-show:hover { background: #cffafe; color: #155e75; }
+    .btn-action-edit {
+      background: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe;
+    }
+    .btn-action-edit:hover { background: #e0e7ff; color: #3730a3; }
+    .btn-action-off {
+      background: var(--bad-bg); color: var(--bad); border: 1px solid #fecdd3;
+    }
+    .btn-action-off:hover { background: #ffe4e6; }
+    .btn-action-on {
+      background: var(--ok-bg); color: var(--ok); border: 1px solid #a7f3d0;
+    }
+    .btn-action-on:hover { background: #d1fae5; }
+    #user-new-modal.user-sheet { max-width: 840px; }
+    #user-new-modal.user-sheet.identity-only { max-width: 520px; }
+    #user-new-modal.identity-only .user-sheet-b { grid-template-columns: 1fr; }
+    #user-key-modal.user-sheet { max-width: 560px; }
+    #user-show-key-modal.user-sheet { max-width: 520px; }
+    .user-sheet-card.modal-card { padding: 0; overflow: hidden; }
+    .user-sheet-card { display: flex; flex-direction: column; max-height: min(88vh, 860px); }
+    .user-sheet-h {
+      padding: 1.2rem 1.4rem 1rem; border-bottom: 1px solid var(--line);
+      display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start;
+    }
+    .user-sheet-h .eyebrow {
+      margin: 0 0 .28rem; font-size: .68rem; font-weight: 800; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--accent);
+    }
+    .user-sheet-h h3 { margin: 0; font-size: 1.28rem; letter-spacing: -.03em; color: var(--ink); }
+    .user-sheet-h .hint { margin: .4rem 0 0; max-width: 52ch; }
+    .user-sheet-b {
+      display: grid; grid-template-columns: 1.05fr .95fr; gap: 0;
+      overflow: auto; flex: 1; background: #f7f9fc;
+    }
+    .user-sheet-pane { padding: 1.15rem 1.35rem 1.3rem; }
+    .user-sheet-pane + .user-sheet-pane { border-left: 1px solid var(--line); background: #fff; }
+    .user-sheet-pane h4 {
+      margin: 0 0 .7rem; font-size: .72rem; font-weight: 800; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--mute);
+    }
+    .user-id-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem .75rem; }
+    .user-id-grid .full { grid-column: 1 / -1; }
+    .user-id-grid .field { margin-top: 0; }
+    .role-picks { display: grid; grid-template-columns: 1fr; gap: .45rem; }
+    .role-pick {
+      display: grid; grid-template-columns: 16px 1fr; gap: .65rem; align-items: start;
+      padding: .7rem .8rem; border: 1px solid var(--line); border-radius: 12px;
+      background: #fff; cursor: pointer; transition: border-color .15s, box-shadow .15s, background .15s;
+    }
+    .role-pick:hover { border-color: #99f6e4; }
+    .role-pick:has(input:checked) {
+      border-color: #5eead4; background: var(--accent-soft);
+      box-shadow: 0 0 0 3px var(--accent-ring);
+    }
+    .role-pick input { margin-top: .2rem; accent-color: var(--accent); }
+    .role-pick strong { display: block; font-size: .86rem; color: var(--ink); }
+    .role-pick small { display: block; margin-top: .12rem; font-size: .72rem; color: var(--mute); font-weight: 600; line-height: 1.35; }
+    .user-sheet-f {
+      padding: .9rem 1.35rem; border-top: 1px solid var(--line);
+      display: flex; justify-content: flex-end; gap: .45rem; background: #fff;
+    }
+    .users-toolbar {
+      display: flex; gap: .55rem; flex-wrap: wrap; align-items: center;
+      margin-bottom: .85rem;
+    }
+    .users-toolbar .field { margin: 0; min-width: 220px; flex: 1; }
+    .users-toolbar .field input, .users-toolbar .field select { height: 38px; }
+    .users-pager {
+      display: flex; align-items: center; justify-content: space-between; gap: .75rem; flex-wrap: wrap;
+      padding: .85rem 1.05rem 0; border-top: 1px solid var(--line); margin-top: .35rem;
+    }
+    .users-pager .meta { font-size: .8rem; color: var(--mute); font-weight: 650; }
+    .pager-btns { display: flex; gap: .28rem; flex-wrap: wrap; align-items: center; }
+    .pager-btns button {
+      min-width: 34px; height: 34px; padding: 0 .55rem; border-radius: 8px;
+      background: #fff; border: 1px solid var(--line); color: var(--text);
+      font-size: .78rem; font-weight: 700;
+    }
+    .pager-btns button:hover { border-color: #99f6e4; }
+    .pager-btns button.active {
+      background: var(--ink); color: #fff; border-color: var(--ink);
+    }
+    .user-sheet .scope-grid {
+      grid-template-columns: 1fr 1fr; max-height: 220px; gap: .3rem; padding: .35rem;
+    }
+    .user-sheet .scope-grid label.scope-item { padding: .32rem .4rem; font-size: .74rem; }
+    .user-sheet .scope-grid label.scope-item small { display: none; }
+    @media (max-width: 760px) {
+      .user-sheet-b, .user-id-grid, .user-sheet .scope-grid { grid-template-columns: 1fr; }
+      .user-sheet-pane + .user-sheet-pane { border-left: 0; border-top: 1px solid var(--line); }
+    }
+    .check-row {
+      display: flex; gap: .5rem; align-items: center;
+      font-size: .88rem; font-weight: 650; color: var(--text); cursor: pointer;
+    }
+    .check-row input { margin: 0; width: 15px; height: 15px; accent-color: var(--accent); flex-shrink: 0; }
+    .switch-mini {
+      position: relative; display: inline-flex; align-items: center; gap: .45rem;
+      font-size: .8rem; font-weight: 700; color: #475569; cursor: pointer; user-select: none;
+    }
+    .switch-mini input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .switch-mini .track {
+      width: 32px; height: 18px; border-radius: 99px;
+      background: #cbd5e1; position: relative; transition: background .18s;
+      flex-shrink: 0;
+    }
+    .switch-mini .track::after {
+      content: ""; position: absolute; top: 2px; left: 2px;
+      width: 14px; height: 14px; border-radius: 50%; background: #fff;
+      box-shadow: 0 1px 2px rgba(11,18,32,.2);
+      transition: transform .18s;
+    }
+    .switch-mini input:checked + .track { background: var(--accent); }
+    .switch-mini input:checked + .track::after { transform: translateX(14px); }
+    .scope-grid {
+      display: grid; grid-template-columns: 1fr; gap: .4rem;
+      margin-top: .35rem; max-height: 240px; overflow: auto;
+      padding: .45rem; border: 1px solid var(--line); border-radius: 10px; background: #fff;
+    }
+    .scope-grid label.scope-item {
+      display: grid; grid-template-columns: 18px 1fr; gap: .5rem; align-items: start;
+      font-size: .78rem; font-weight: 650; color: #334155;
+      padding: .4rem .45rem; border-radius: 8px;
+    }
+    .scope-grid label.scope-item:hover { background: #f8fafc; }
+    .scope-grid label.scope-item small {
+      display: block; font-size: .68rem; font-weight: 600; color: #94a3b8;
+      font-family: var(--mono); margin-top: .1rem;
+    }
+    dialog.modal { max-width: 520px; }
+    .key-list { display: flex; flex-direction: column; gap: .45rem; margin-top: .65rem; }
+    .key-row {
+      display: grid; grid-template-columns: 1fr auto; gap: .5rem; align-items: center;
+      padding: .65rem .7rem; border: 1px solid var(--line); border-radius: 12px; background: #fff;
+    }
+    .key-row strong { display: block; font-size: .82rem; }
+    .key-row code { font-size: .7rem; color: var(--mute); }
+    .key-row .actions { display: flex; gap: .3rem; flex-wrap: wrap; justify-content: flex-end; }
+    .key-reveal {
+      margin-top: .85rem; padding: .85rem; border-radius: 12px;
+      background: #0b1220; color: #e2e8f0;
+    }
+    .key-reveal strong { display: block; font-size: .85rem; color: #5eead4; }
+    .key-reveal p { margin: .25rem 0 .55rem; font-size: .75rem; color: #94a3b8; }
+    .key-reveal code {
+      display: block; word-break: break-all; font-family: var(--mono);
+      font-size: .78rem; margin-bottom: .55rem; color: #fff;
+    }
+    dialog.modal {
+      border: 0; border-radius: 16px; padding: 0;
+      box-shadow: var(--shadow-lg); max-width: 520px; width: calc(100% - 2rem);
+    }
+    dialog.modal::backdrop { background: rgba(11,18,32,.45); }
+    .modal-card { padding: 1.25rem 1.35rem 1.35rem; }
+    .modal-card h3 { margin: 0 0 .35rem; font-size: 1.05rem; }
+    .modal-card .field { margin-top: .65rem; }
+
+    @media (max-width: 960px) {
+      .auth-layout, .settings-grid { grid-template-columns: 1fr; }
+      .auth-side { position: static; }
+    }
+
+    @media (max-width: 560px) {
+      .learn-chapters { grid-template-columns: 1fr; }
+      .learn-stamp { width: 96px; min-height: 96px; }
+    }
+
+    /* Junior diagrams */
+    .learn-mode-seg {
+      display: inline-flex; gap: .3rem; padding: .3rem;
+      background: #eef6f5; border: 1px solid #c7ece7; border-radius: 999px;
+    }
+    .learn-mode-seg button {
+      border-radius: 999px; padding: .45rem .95rem;
+      font-weight: 800; font-size: .8rem; color: #64748b;
+      background: transparent; border: 0;
+      font-family: var(--learn-font, inherit);
+    }
+    .learn-mode-seg button.active {
+      background: #fff; color: #0f766e;
+      box-shadow: 0 2px 8px rgba(15,118,110,.12);
+    }
+    #panel-learn.jr-mode .learn-hero {
+      background:
+        radial-gradient(circle at 12% 20%, rgba(255,255,255,.7), transparent 45%),
+        linear-gradient(145deg, #e8f1f8 0%, #e6f4f1 55%, #dceaf5 100%);
+      border-color: #b7cfe0;
+    }
+    #panel-learn.jr-mode .learn-hero .eyebrow {
+      color: #0f4c75; border-color: #93c5fd; background: rgba(255,255,255,.85);
+    }
+    .learn-track { display: none; }
+    .learn-track.active { display: block; }
+    .jr-diagram {
+      display: grid; gap: 1rem;
+    }
+    .jr-flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1.2fr auto 1fr;
+      gap: .55rem; align-items: stretch;
+    }
+    .jr-box {
+      border: 2px solid #cbd5e1; border-radius: 14px; background: #fff;
+      padding: .75rem .8rem; min-width: 0;
+      transition: border-color .3s, box-shadow .3s, transform .3s;
+    }
+    .jr-box h5 {
+      margin: 0 0 .45rem; font-size: .68rem; font-weight: 800;
+      letter-spacing: .06em; text-transform: uppercase; color: #64748b;
+    }
+    .jr-box ul { margin: 0; padding: 0; list-style: none; }
+    .jr-box li {
+      font-size: .78rem; font-weight: 700; color: #334155;
+      padding: .28rem 0; border-bottom: 1px dashed #e2e8f0;
+    }
+    .jr-box li:last-child { border-bottom: 0; }
+    .jr-box.hub-box {
+      border-color: #5eead4; background: linear-gradient(180deg, #ecfdf8, #fff);
+    }
+    .jr-box.lit {
+      border-color: #0f766e;
+      box-shadow: 0 0 0 4px rgba(15,118,110,.14);
+      transform: translateY(-2px);
+    }
+    .jr-arrow {
+      align-self: center; font-weight: 800; color: #94a3b8; font-size: .95rem;
+      opacity: .45; transition: color .3s, opacity .3s;
+    }
+    .jr-arrow.on { color: #0f766e; opacity: 1; }
+    .jr-providers { display: grid; gap: .4rem; }
+    .jr-providers .mini {
+      border: 1.5px solid #e2e8f0; border-radius: 10px;
+      padding: .4rem .55rem; font-size: .74rem; font-weight: 750; color: #475569;
+      background: #f8fafc; transition: all .3s;
+    }
+    .jr-providers .mini.lit {
+      border-color: #5eead4; background: #ecfdf8; color: #0f766e;
+    }
+    .jr-note {
+      font-size: .8rem; font-weight: 700; color: #64748b;
+      background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px;
+      padding: .65rem .8rem; line-height: 1.45;
+    }
+    .jr-note code {
+      font-family: var(--mono); font-size: .72rem; background: #ecfdf8;
+      color: #0f766e; padding: .1rem .35rem; border-radius: 4px;
+    }
+
+    .jr-http {
+      display: grid; grid-template-columns: 1fr 40px 1fr; gap: .65rem; align-items: stretch;
+    }
+    .jr-http-card {
+      border-radius: 14px; overflow: hidden;
+      border: 2px solid #1e293b; background: #0b1220; color: #e2e8f0;
+      min-height: 250px;
+    }
+    .jr-http-card header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: .5rem .7rem; background: rgba(255,255,255,.05);
+      border-bottom: 1px solid rgba(148,163,184,.2);
+      font-size: .68rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase;
+      color: #94a3b8;
+    }
+    .jr-http-card header .tag {
+      font-family: var(--mono); font-size: .65rem; font-weight: 700;
+      padding: .15rem .45rem; border-radius: 6px;
+      background: rgba(45,212,191,.15); color: #5eead4;
+    }
+    .jr-http-card .parts { padding: .55rem .65rem .75rem; display: grid; gap: .4rem; }
+    .jr-part {
+      border: 1px solid rgba(148,163,184,.2); border-radius: 10px;
+      padding: .45rem .55rem; opacity: .4;
+      transition: opacity .35s, border-color .35s, background .35s;
+    }
+    .jr-part.show { opacity: 1; }
+    .jr-part.lit {
+      border-color: rgba(94,234,212,.55);
+      background: rgba(15,118,110,.22);
+    }
+    .jr-part .lbl {
+      font-size: .62rem; font-weight: 800; letter-spacing: .06em;
+      text-transform: uppercase; color: #5eead4; margin-bottom: .2rem;
+    }
+    .jr-part pre {
+      margin: 0; font-family: var(--mono); font-size: .68rem; line-height: 1.45;
+      white-space: pre-wrap; word-break: break-word; color: #e2e8f0;
+    }
+    .jr-part .k { color: #fcd34d; }
+    .jr-part .s { color: #5eead4; }
+    .jr-part .d { color: #64748b; }
+    .jr-http-mid {
+      display: grid; place-items: center; font-weight: 800; color: #0f766e; font-size: 1.2rem;
+    }
+    .jr-http-mid span {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: grid; place-items: center;
+      background: #ecfdf8; border: 2px solid #99f6e4;
+      animation: learnFloat 2.4s ease-in-out infinite;
+    }
+    .jr-legend {
+      display: flex; flex-wrap: wrap; gap: .4rem;
+    }
+    .jr-legend span {
+      font-size: .72rem; font-weight: 750; color: #475569;
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 999px;
+      padding: .28rem .65rem;
+    }
+    .jr-legend span.hi { background: #ecfdf8; border-color: #99f6e4; color: #0f766e; }
+
+    .jr-soap {
+      display: grid; grid-template-columns: 1.15fr .85fr; gap: 1rem; align-items: start;
+    }
+    .jr-soap-stack {
+      border: 2px solid #0f766e; border-radius: 16px;
+      background: linear-gradient(180deg, #ecfdf8, #fff);
+      padding: .7rem; position: relative;
+    }
+    .jr-soap-stack > .cap {
+      font-size: .68rem; font-weight: 800; letter-spacing: .05em;
+      text-transform: uppercase; color: #0f766e; margin-bottom: .5rem;
+    }
+    .jr-soap-layer {
+      border: 2px dashed #94a3b8; border-radius: 12px;
+      padding: .55rem .65rem; margin-top: .45rem;
+      background: rgba(255,255,255,.85);
+      opacity: .35; transform: translateY(6px);
+      transition: all .4s var(--ease);
+    }
+    .jr-soap-layer.show { opacity: 1; transform: none; }
+    .jr-soap-layer.lit {
+      border-style: solid; border-color: #0f766e;
+      box-shadow: 0 0 0 3px rgba(15,118,110,.12);
+    }
+    .jr-soap-layer strong {
+      display: block; font-size: .82rem; font-weight: 800; color: #0b1220;
+    }
+    .jr-soap-layer p {
+      margin: .2rem 0 0; font-size: .74rem; color: #64748b; font-weight: 650; line-height: 1.4;
+    }
+    .jr-soap-layer pre {
+      margin: .45rem 0 0; padding: .45rem .55rem;
+      background: #0b1220; color: #e2e8f0; border-radius: 8px;
+      font-family: var(--mono); font-size: .65rem; line-height: 1.45;
+      white-space: pre-wrap;
+    }
+    .jr-soap-side {
+      display: grid; gap: .55rem;
+    }
+    .jr-callout {
+      border: 1.5px solid #e2e8f0; border-radius: 12px;
+      padding: .7rem .8rem; background: #fff;
+      opacity: .4; transition: all .35s;
+    }
+    .jr-callout.show { opacity: 1; }
+    .jr-callout.lit { border-color: #5eead4; background: #ecfdf8; }
+    .jr-callout strong { display: block; font-size: .82rem; font-weight: 800; }
+    .jr-callout p { margin: .25rem 0 0; font-size: .76rem; color: #64748b; font-weight: 650; line-height: 1.4; }
+
+    .jr-compare {
+      display: grid; grid-template-columns: 1fr 1fr; gap: .85rem;
+    }
+    .jr-compare-card {
+      border: 2px solid #e2e8f0; border-radius: 16px; background: #fff;
+      padding: .85rem; opacity: .35; transform: translateY(8px);
+      transition: all .4s var(--ease);
+    }
+    .jr-compare-card.show { opacity: 1; transform: none; }
+    .jr-compare-card.lit { border-color: #5eead4; box-shadow: 0 8px 20px rgba(15,118,110,.1); }
+    .jr-compare-card h5 {
+      margin: 0 0 .55rem; font-size: .9rem; font-weight: 800;
+      display: flex; align-items: center; gap: .45rem;
+    }
+    .jr-compare-card h5 .badge {
+      font-size: .65rem; font-weight: 800; padding: .15rem .45rem;
+      border-radius: 6px; background: #ecfdf8; color: #0f766e;
+    }
+    .jr-compare-card .row {
+      display: grid; grid-template-columns: 88px 1fr; gap: .4rem;
+      padding: .35rem 0; border-top: 1px dashed #e2e8f0;
+      font-size: .76rem;
+    }
+    .jr-compare-card .row span:first-child { font-weight: 800; color: #64748b; }
+    .jr-compare-card .row span:last-child { font-weight: 700; color: #0f172a; }
+    .jr-compare-card pre {
+      margin: .55rem 0 0; padding: .55rem .6rem;
+      background: #0b1220; color: #e2e8f0; border-radius: 10px;
+      font-family: var(--mono); font-size: .62rem; line-height: 1.45;
+      white-space: pre-wrap; max-height: 140px; overflow: auto;
+    }
+
+    @media (max-width: 900px) {
+      .jr-flow { grid-template-columns: 1fr; }
+      .jr-arrow { transform: rotate(90deg); justify-self: center; }
+      .jr-http { grid-template-columns: 1fr; }
+      .jr-http-mid { padding: .2rem 0; }
+      .jr-soap { grid-template-columns: 1fr; }
+      .jr-compare { grid-template-columns: 1fr; }
+    }
 
     @media (max-width: 1100px) {
       .kpi-row { grid-template-columns: repeat(2, 1fr); }
@@ -1018,7 +1991,7 @@
     <div class="login-side">
       <form class="login-box" id="login-form">
         <h2>Welcome back</h2>
-        <p class="sub">Sign in to your dashboard, providers, and call analytics.</p>
+        <p class="sub">Administrator sign-in for the dashboard. B2B and B2C users call APIs with their key.</p>
         <div class="field" style="margin-bottom:.75rem">
           <label for="username">Username</label>
           <input id="username" value="admin" autocomplete="username" />
@@ -1059,6 +2032,14 @@
         <button type="button" class="nav-item" data-nav="routes">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8 7.5c4 0 4 9 8 9"/></svg>
           API map
+        </button>
+        <button type="button" class="nav-item" data-nav="learn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h6"/></svg>
+          Learn
+        </button>
+        <button type="button" class="nav-item" data-nav="settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Users
         </button>
       </nav>
       <div class="search-shell">
@@ -1329,6 +2310,519 @@
             </div>
           </div>
           <div class="type-grid" id="aggregation-map"></div>
+        </section>
+
+        <section class="panel" id="panel-settings">
+          <div class="page-head">
+            <div>
+              <h1>Users</h1>
+              <p>Admin can use this dashboard. B2B and B2C users call only the APIs on their key — they cannot sign in here.</p>
+            </div>
+            <div class="page-actions">
+              <button type="button" class="btn btn-primary" id="su-new">Add user</button>
+            </div>
+          </div>
+          <article class="card card-pad">
+            <div class="users-toolbar">
+              <label class="field">
+                <span class="flabel">Search</span>
+                <input id="su-search" type="search" placeholder="Name, email, description…" autocomplete="off" />
+              </label>
+              <label class="field" style="flex:0 0 160px;min-width:140px">
+                <span class="flabel">Role</span>
+                <select id="su-filter-role">
+                  <option value="">All roles</option>
+                  <option value="admin">Admin</option>
+                  <option value="b2b">B2B</option>
+                  <option value="b2c">B2C</option>
+                </select>
+              </label>
+            </div>
+            <div class="table-wrap" style="border:0;box-shadow:none">
+              <table>
+                <thead><tr><th>User</th><th>Role</th><th>API permissions</th><th>Status</th><th></th></tr></thead>
+                <tbody id="su-table"></tbody>
+              </table>
+            </div>
+            <div class="users-pager" id="su-pager" hidden></div>
+          </article>
+
+          <dialog class="modal user-sheet" id="user-new-modal">
+            <form method="dialog" class="modal-card user-sheet-card" id="user-new-form">
+              <header class="user-sheet-h">
+                <div>
+                  <p class="eyebrow">Access control</p>
+                  <h3>Add user</h3>
+                  <p class="hint">B2B and B2C cannot sign in here — they authenticate with the API key. Admin can open this dashboard.</p>
+                </div>
+                <button type="button" class="btn btn-ghost btn-sm" id="su-cancel">Close</button>
+              </header>
+              <div class="user-sheet-b">
+                <section class="user-sheet-pane">
+                  <h4>Identity</h4>
+                  <div class="user-id-grid">
+                    <label class="field"><span class="flabel">Username</span><input id="su-username" required autocomplete="off" /></label>
+                    <label class="field"><span class="flabel">Email</span><input id="su-email" type="email" required /></label>
+                    <label class="field" id="su-password-wrap" hidden>
+                      <span class="flabel">Password</span>
+                      <input id="su-password" type="password" minlength="6" autocomplete="new-password" placeholder="Dashboard sign-in" />
+                    </label>
+                    <label class="field" id="su-active-wrap" style="display:flex;align-items:flex-end;padding-bottom:.15rem">
+                      <span class="switch-mini">
+                        <input type="checkbox" id="su-active" checked />
+                        <span class="track"></span>
+                        <span>Active</span>
+                      </span>
+                    </label>
+                    <label class="field full"><span class="flabel">Description</span>
+                      <textarea id="su-desc" rows="3" placeholder="Who this user is and what they do…"></textarea>
+                    </label>
+                  </div>
+                  <h4 style="margin-top:1.15rem">Role</h4>
+                  <div class="role-picks">
+                    <label class="role-pick">
+                      <input type="radio" name="su-role" value="b2b" checked />
+                      <span><strong>B2B</strong><small>Partner or agency. API key only — no dashboard password.</small></span>
+                    </label>
+                    <label class="role-pick">
+                      <input type="radio" name="su-role" value="b2c" />
+                      <span><strong>B2C</strong><small>Consumer-facing product. API key only — no dashboard password.</small></span>
+                    </label>
+                    <label class="role-pick">
+                      <input type="radio" name="su-role" value="admin" />
+                      <span><strong>Admin</strong><small>Dashboard sign-in. Requires a password.</small></span>
+                    </label>
+                  </div>
+                </section>
+                <section class="user-sheet-pane" id="su-key-pane">
+                  <h4>API key</h4>
+                  <label class="field" style="margin-top:0">
+                    <span class="flabel">Secret</span>
+                    <span class="key-input-row">
+                      <input id="su-api-key" required minlength="8" autocomplete="off" placeholder="Paste or generate, then edit" />
+                      <button type="button" class="btn btn-secondary" id="su-key-gen">Generate</button>
+                    </span>
+                  </label>
+                  <p class="hint" style="margin:.45rem 0 .85rem">This key is stored so you can view and edit it later. Send it as <code>X-API-Key</code>.</p>
+                  <h4>Allowed APIs</h4>
+                  <div class="scope-grid" id="su-scopes"></div>
+                </section>
+              </div>
+              <footer class="user-sheet-f">
+                <button type="button" class="btn btn-ghost" id="su-cancel-2">Cancel</button>
+                <button type="submit" class="btn btn-primary">Create user</button>
+              </footer>
+            </form>
+          </dialog>
+
+          <dialog class="modal user-sheet" id="user-show-key-modal">
+            <div class="modal-card user-sheet-card">
+              <header class="user-sheet-h">
+                <div>
+                  <p class="eyebrow">Credentials</p>
+                  <h3>API key</h3>
+                  <p class="hint" id="usk-hint">Visible only to administrators. Copy it, then send as <code>X-API-Key</code>.</p>
+                </div>
+                <button type="button" class="btn btn-ghost btn-sm" id="usk-close">Close</button>
+              </header>
+              <div class="user-sheet-pane" style="background:#fff">
+                <code class="user-key-full" id="usk-secret"></code>
+              </div>
+              <footer class="user-sheet-f">
+                <button type="button" class="btn btn-ghost" id="usk-close-2">Close</button>
+                <button type="button" class="btn btn-primary" id="usk-copy">Copy key</button>
+              </footer>
+            </div>
+          </dialog>
+
+          <dialog class="modal user-sheet" id="user-key-modal">
+            <form method="dialog" class="modal-card user-sheet-card" id="user-key-form">
+              <header class="user-sheet-h">
+                <div>
+                  <p class="eyebrow">Credentials</p>
+                  <h3>Edit API key</h3>
+                  <p class="hint" id="user-key-hint">Change the key, generate a new one, or update which APIs it can call.</p>
+                </div>
+                <button type="button" class="btn btn-ghost btn-sm" id="uk-cancel">Close</button>
+              </header>
+              <div class="user-sheet-pane" style="background:#fff">
+                <input type="hidden" id="uk-user-id" />
+                <label class="field" style="margin-top:0">
+                  <span class="flabel">API key</span>
+                  <span class="key-input-row">
+                    <input id="uk-api-key" required minlength="8" autocomplete="off" />
+                    <button type="button" class="btn btn-secondary" id="uk-key-gen">Generate</button>
+                  </span>
+                </label>
+                <h4 style="margin-top:1.1rem">Allowed APIs</h4>
+                <div class="scope-grid" id="uk-scopes"></div>
+              </div>
+              <footer class="user-sheet-f">
+                <button type="button" class="btn btn-ghost" id="uk-cancel-2">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save key</button>
+              </footer>
+            </form>
+          </dialog>
+        </section>
+
+        <section class="panel" id="panel-learn">
+          <div class="page-head">
+            <div>
+              <h1 id="learn-page-title">Story time with Sky</h1>
+              <p id="learn-page-sub">A friendly guide to how flight helpers, APIs, POST, and SOAP work — told like a picture book.</p>
+            </div>
+            <div class="page-actions">
+              <div class="learn-mode-seg" role="tablist" aria-label="Learn mode">
+                <button type="button" class="active" data-learn-mode="story" id="learn-mode-story">Story</button>
+                <button type="button" data-learn-mode="junior" id="learn-mode-junior">Junior diagrams</button>
+              </div>
+            </div>
+          </div>
+          <div class="learn-shell">
+            <aside class="learn-rail" aria-label="Story chapters">
+              <div class="learn-guide-mini" id="learn-guide-card">
+                <div class="face" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" fill="none"><path d="M8 28c8-2 14-10 18-18 2 8 8 14 16 16-8 2-14 8-16 18-2-8-8-14-18-16z" fill="#fff" opacity=".95"/><circle cx="24" cy="24" r="3" fill="#0f766e"/></svg>
+                </div>
+                <div>
+                  <strong id="learn-guide-name">Sky the helper</strong>
+                  <span id="learn-guide-tag">I’ll explain it simply!</span>
+                </div>
+              </div>
+              <h3 id="learn-rail-h">Our adventure</h3>
+              <div class="learn-chapters" id="learn-chapters"></div>
+              <div class="learn-progress" aria-hidden="true"><i id="learn-progress-bar"></i></div>
+              <div class="learn-progress-label" id="learn-progress-label">0 of 5 stars</div>
+            </aside>
+            <div class="learn-stage">
+              <div class="learn-hero">
+                <div class="clouds" aria-hidden="true"><span class="cloud c1"></span><span class="cloud c2"></span></div>
+                <div class="eyebrow" id="learn-eyebrow">Chapter 1</div>
+                <h2 id="learn-title">Too many airplane shops</h2>
+                <p id="learn-lead">You want a flight. Each airline talks differently. That would be confusing!</p>
+                <div class="learn-hero-actions">
+                  <button type="button" class="btn btn-play" id="learn-play">▶ Watch the story</button>
+                  <button type="button" class="btn btn-ghost-light" id="learn-replay">Again!</button>
+                </div>
+              </div>
+              <div class="learn-board">
+                <div class="learn-board-h">
+                  <strong id="learn-board-title">Picture time</strong>
+                  <span id="learn-board-status">Tap Watch the story</span>
+                </div>
+                <div class="learn-canvas" id="learn-canvas">
+                  <div class="learn-track active" id="learn-track-story">
+                  <div class="learn-scene active" data-scene="0" id="learn-scene-0">
+                    <div class="learn-story-row" id="learn-agg-nodes">
+                      <div class="learn-char you" data-node="app">
+                        <div class="bubble-face face-you" aria-hidden="true"><span class="eye"></span><span class="eye"></span><span class="smile"></span></div>
+                        <strong>You</strong>
+                        <small>Want a flight</small>
+                      </div>
+                      <div class="learn-char hub" data-node="hub">
+                        <div class="bubble-face" aria-hidden="true">
+                          <svg viewBox="0 0 48 48" fill="none" width="40" height="40"><path d="M8 28c8-2 14-10 18-18 2 8 8 14 16 16-8 2-14 8-16 18-2-8-8-14-18-16z" fill="#fff"/><circle cx="24" cy="24" r="3" fill="#0f766e"/></svg>
+                        </div>
+                        <strong>Sky Nepal</strong>
+                        <small>Your helper friend</small>
+                      </div>
+                      <div class="learn-char p1" data-node="p1">
+                        <div class="bubble-face face-plane" aria-hidden="true"><span class="wing"></span></div>
+                        <strong>Airline A</strong>
+                        <small>Talks in JSON</small>
+                      </div>
+                      <div class="learn-char p2" data-node="p2">
+                        <div class="bubble-face face-shop" aria-hidden="true"><span class="door"></span></div>
+                        <strong>Agency B</strong>
+                        <small>Talks in SOAP</small>
+                      </div>
+                      <div class="learn-char p3" data-node="p3">
+                        <div class="bubble-face face-plane alt" aria-hidden="true"><span class="wing"></span></div>
+                        <strong>Airline C</strong>
+                        <small>Talks its own way</small>
+                      </div>
+                    </div>
+                    <div class="learn-packet" id="learn-packet-0">Hi!</div>
+                  </div>
+
+                  <div class="learn-scene" data-scene="1" id="learn-scene-1">
+                    <div class="learn-steps-kid" id="learn-stack">
+                      <div class="learn-step-card" data-layer="0">
+                        <div class="num">1</div>
+                        <div>
+                          <strong>Listen carefully</strong>
+                          <p>Sky hears what you want: from–to–when.</p>
+                        </div>
+                      </div>
+                      <div class="learn-step-card" data-layer="1">
+                        <div class="num">2</div>
+                        <div>
+                          <strong>Ask every shop</strong>
+                          <p>Sky asks many airlines at once — like a helpful messenger.</p>
+                        </div>
+                      </div>
+                      <div class="learn-step-card" data-layer="2">
+                        <div class="num">3</div>
+                        <div>
+                          <strong>Mix the answers</strong>
+                          <p>Different replies become one neat list of flights.</p>
+                        </div>
+                      </div>
+                      <div class="learn-step-card" data-layer="3">
+                        <div class="num">4</div>
+                        <div>
+                          <strong>Tell you clearly</strong>
+                          <p>You get one simple answer. No confusion!</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="learn-scene" data-scene="2" id="learn-scene-2">
+                    <div class="learn-mail">
+                      <div class="learn-mail-box out" id="learn-post-req">
+                        <h5>You mail a letter</h5>
+                        <div class="learn-letter" id="learn-post-req-body">
+                          Please find flights<br/>
+                          Kathmandu → Pokhara<br/>
+                          on Sept 1
+                          <span class="tiny">Grown-up word: this letter is a POST</span>
+                        </div>
+                      </div>
+                      <div class="learn-mail-plane" aria-hidden="true">
+                        <span class="mail-arrow">→</span>
+                      </div>
+                      <div class="learn-mail-box back" id="learn-post-res">
+                        <h5>Mailbox reply</h5>
+                        <div class="learn-letter" id="learn-post-res-body">
+                          Waiting for your letter…
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="learn-scene" data-scene="3" id="learn-scene-3">
+                    <div class="learn-soap-story">
+                      <div class="learn-envelope" id="learn-envelope">
+                        <div class="flap"></div>
+                        <div class="note" id="learn-soap-note">
+                          Same ask: KTM → PKR<br/>
+                          <span style="font-size:.78rem;color:#64748b;font-weight:700">Inside a fancy SOAP folder</span>
+                        </div>
+                      </div>
+                      <div class="learn-soap-compare">
+                        <span>POST = mailing</span>
+                        <span class="hi">SOAP = fancy folder</span>
+                        <span>XML = the writing style</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="learn-scene" data-scene="4" id="learn-scene-4">
+                    <div class="learn-adventure" id="learn-booking-flow">
+                      <div class="learn-stamp" data-flow="0"><span class="ico ico-search"></span><small>Look for flights</small></div>
+                      <span class="learn-adv-arrow" data-flow-a="0">→</span>
+                      <div class="learn-stamp" data-flow="1"><span class="ico ico-hold"></span><small>Hold a seat</small></div>
+                      <span class="learn-adv-arrow" data-flow-a="1">→</span>
+                      <div class="learn-stamp" data-flow="2"><span class="ico ico-ticket"></span><small>Get the ticket</small></div>
+                      <span class="learn-adv-arrow" data-flow-a="2">→</span>
+                      <div class="learn-stamp" data-flow="3"><span class="ico ico-map"></span><small>See your trip</small></div>
+                    </div>
+                    <div class="learn-adv-hero">
+                      <div class="plane" aria-hidden="true">
+                        <svg viewBox="0 0 48 48" fill="none"><path d="M6 26l36-10-10 18-8-4-6 8-4-2 6-8-8-4z" fill="#fff"/></svg>
+                      </div>
+                      <strong>Sky flies with you</strong>
+                      <small id="learn-flow-caption">Ready for takeoff</small>
+                    </div>
+                  </div>
+                  </div>
+
+                  <div class="learn-track" id="learn-track-junior">
+                    <div class="learn-scene" data-jr-scene="0" id="jr-scene-0">
+                      <div class="jr-diagram">
+                        <div class="jr-flow" id="jr-arch-flow">
+                          <div class="jr-box" data-jr="client">
+                            <h5>Your app</h5>
+                            <ul>
+                              <li>One JSON contract</li>
+                              <li><code style="font-family:var(--mono);font-size:.7rem">POST /api/v1/…</code></li>
+                              <li>No airline quirks</li>
+                            </ul>
+                          </div>
+                          <div class="jr-arrow" data-jr-a="0">→</div>
+                          <div class="jr-box hub-box" data-jr="hub">
+                            <h5>Aggregator</h5>
+                            <ul>
+                              <li>Auth + routing</li>
+                              <li>Request mapping</li>
+                              <li>Fan-out + merge</li>
+                              <li>Response mapping</li>
+                            </ul>
+                          </div>
+                          <div class="jr-arrow" data-jr-a="1">→</div>
+                          <div class="jr-box" data-jr="providers">
+                            <h5>Providers</h5>
+                            <div class="jr-providers" id="jr-prov-list">
+                              <div class="mini" data-jr-p="0">REST airline · JSON POST</div>
+                              <div class="mini" data-jr-p="1">Agency · SOAP XML</div>
+                              <div class="mini" data-jr-p="2">Custom partner · HTTP</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="jr-note">Juniors: the aggregator is an <strong>adapter layer</strong>. Your product only learns one shape; providers keep their own APIs.</div>
+                      </div>
+                    </div>
+
+                    <div class="learn-scene" data-jr-scene="1" id="jr-scene-1">
+                      <div class="jr-diagram">
+                        <div class="jr-legend">
+                          <span class="hi">POST = HTTP method</span>
+                          <span>Headers = metadata</span>
+                          <span>Body = JSON payload</span>
+                          <span>Response = status + JSON</span>
+                        </div>
+                        <div class="jr-http" id="jr-http">
+                          <div class="jr-http-card">
+                            <header><span>Request</span><span class="tag">POST</span></header>
+                            <div class="parts">
+                              <div class="jr-part" data-jr-part="line"><div class="lbl">1 · Start line</div><pre><span class="s">POST</span> /api/v1/booking/search <span class="d">HTTP/1.1</span></pre></div>
+                              <div class="jr-part" data-jr-part="headers"><div class="lbl">2 · Headers</div><pre><span class="k">Host:</span> api.skynepal.local
+<span class="k">Content-Type:</span> application/json
+<span class="k">Authorization:</span> Bearer …</pre></div>
+                              <div class="jr-part" data-jr-part="body"><div class="lbl">3 · JSON body</div><pre>{
+  <span class="k">"origin"</span>: <span class="s">"KTM"</span>,
+  <span class="k">"destination"</span>: <span class="s">"PKR"</span>,
+  <span class="k">"departure_date"</span>: <span class="s">"2026-09-01"</span>,
+  <span class="k">"adults"</span>: 1
+}</pre></div>
+                            </div>
+                          </div>
+                          <div class="jr-http-mid"><span>→</span></div>
+                          <div class="jr-http-card">
+                            <header><span>Response</span><span class="tag">200</span></header>
+                            <div class="parts">
+                              <div class="jr-part" data-jr-part="status"><div class="lbl">4 · Status</div><pre><span class="d">HTTP/1.1</span> <span class="s">200 OK</span></pre></div>
+                              <div class="jr-part" data-jr-part="reshead"><div class="lbl">5 · Headers</div><pre><span class="k">Content-Type:</span> application/json</pre></div>
+                              <div class="jr-part" data-jr-part="resbody"><div class="lbl">6 · JSON body</div><pre>{
+  <span class="k">"items"</span>: [
+    { <span class="k">"offer_id"</span>: <span class="s">"us-1"</span>, <span class="k">"price"</span>: 4500 }
+  ]
+}</pre></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="jr-note">This is what a <strong>REST POST API</strong> looks like: method + URL + headers + JSON body. GET usually has no body; POST carries data.</div>
+                      </div>
+                    </div>
+
+                    <div class="learn-scene" data-jr-scene="2" id="jr-scene-2">
+                      <div class="jr-diagram">
+                        <div class="jr-soap" id="jr-soap">
+                          <div class="jr-soap-stack">
+                            <div class="cap">SOAP message shape</div>
+                            <div class="jr-soap-layer" data-jr-soap="env">
+                              <strong>Envelope</strong>
+                              <p>Outer wrapper — every SOAP call has one.</p>
+                              <pre>&lt;soap:Envelope xmlns:soap="…"&gt;
+  …
+&lt;/soap:Envelope&gt;</pre>
+                            </div>
+                            <div class="jr-soap-layer" data-jr-soap="hdr">
+                              <strong>Header (optional)</strong>
+                              <p>Auth tokens, agency codes, tracing.</p>
+                              <pre>&lt;soap:Header&gt;
+  &lt;Auth&gt;…&lt;/Auth&gt;
+&lt;/soap:Header&gt;</pre>
+                            </div>
+                            <div class="jr-soap-layer" data-jr-soap="body">
+                              <strong>Body → operation</strong>
+                              <p>The real method + fields (XML, not JSON).</p>
+                              <pre>&lt;soap:Body&gt;
+  &lt;GetAvailability&gt;
+    &lt;SectorFrom&gt;KTM&lt;/SectorFrom&gt;
+    &lt;SectorTo&gt;PKR&lt;/SectorTo&gt;
+  &lt;/GetAvailability&gt;
+&lt;/soap:Body&gt;</pre>
+                            </div>
+                          </div>
+                          <div class="jr-soap-side">
+                            <div class="jr-callout" data-jr-soap-c="0">
+                              <strong>Still HTTP POST</strong>
+                              <p>SOAP rides on POST to one endpoint URL.</p>
+                            </div>
+                            <div class="jr-callout" data-jr-soap-c="1">
+                              <strong>SOAPAction</strong>
+                              <p>Header names the operation (e.g. GetAvailability).</p>
+                            </div>
+                            <div class="jr-callout" data-jr-soap-c="2">
+                              <strong>Content-Type</strong>
+                              <p>Usually <code>text/xml</code> or <code>application/soap+xml</code>.</p>
+                            </div>
+                            <div class="jr-callout" data-jr-soap-c="3">
+                              <strong>In this console</strong>
+                              <p>Enable SOAP on a provider — the adapter builds the envelope from your mapping.</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="jr-note">SOAP looks nested: <strong>Envelope → Header/Body → Method</strong>. Same idea as POST, different packaging (XML).</div>
+                      </div>
+                    </div>
+
+                    <div class="learn-scene" data-jr-scene="3" id="jr-scene-3">
+                      <div class="jr-diagram">
+                        <div class="jr-compare" id="jr-compare">
+                          <div class="jr-compare-card" data-jr-cmp="0">
+                            <h5>REST POST <span class="badge">JSON</span></h5>
+                            <div class="row"><span>Transport</span><span>HTTP POST</span></div>
+                            <div class="row"><span>Format</span><span>JSON object</span></div>
+                            <div class="row"><span>URL</span><span>Often one path per action</span></div>
+                            <div class="row"><span>Action</span><span>Encoded in the path / method</span></div>
+                            <div class="row"><span>Looks like</span><span>Clean key/value document</span></div>
+                            <pre>POST /v1/search
+Content-Type: application/json
+
+{"origin":"KTM","destination":"PKR"}</pre>
+                          </div>
+                          <div class="jr-compare-card" data-jr-cmp="1">
+                            <h5>SOAP <span class="badge">XML</span></h5>
+                            <div class="row"><span>Transport</span><span>Also HTTP POST</span></div>
+                            <div class="row"><span>Format</span><span>XML envelope</span></div>
+                            <div class="row"><span>URL</span><span>Often one shared endpoint</span></div>
+                            <div class="row"><span>Action</span><span>SOAPAction + body method</span></div>
+                            <div class="row"><span>Looks like</span><span>Nested tags in a folder</span></div>
+                            <pre>POST /Booking.asmx
+SOAPAction: GetAvailability
+Content-Type: text/xml
+
+&lt;soap:Envelope&gt;…&lt;/soap:Envelope&gt;</pre>
+                          </div>
+                        </div>
+                        <div class="jr-note">Rule of thumb: if the body is <code>{…}</code> you’re in REST/JSON land; if you see <code>&lt;soap:Envelope&gt;</code>, you’re in SOAP land — both can be POST.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="learn-teach">
+                  <div class="coach">
+                    <div class="ava-coach" aria-hidden="true">
+                      <svg viewBox="0 0 48 48" fill="none"><path d="M8 28c8-2 14-10 18-18 2 8 8 14 16 16-8 2-14 8-16 18-2-8-8-14-18-16z" fill="#fff"/><circle cx="24" cy="24" r="3" fill="#0f766e"/></svg>
+                    </div>
+                    <div>
+                      <h4 id="learn-coach-title">Sky says</h4>
+                      <p id="learn-coach-body">Press Watch the story. I’ll show how I ask every airline for you!</p>
+                      <div class="hint-line" id="learn-coach-hint">Then try the tiny quiz — earn a star!</div>
+                      <div class="learn-quiz" id="learn-quiz"></div>
+                    </div>
+                  </div>
+                  <div class="learn-nav-btns">
+                    <button type="button" class="btn btn-secondary btn-sm" id="learn-prev">← Back</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="learn-next">Next →</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
 
         <section class="panel" id="panel-provider-form">
@@ -1621,7 +3115,7 @@
       const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
       if (token) headers.Authorization = `Bearer ${token}`;
       const res = await fetch(`${API}${path}`, { ...options, headers });
-      if (res.status === 401) { logout(false); throw new Error("Session expired"); }
+      if (res.status === 401 && path !== "/auth/login") { logout(false); throw new Error("Session expired"); }
       if (res.status === 204) return null;
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data?.error?.message || data?.detail || res.statusText);
@@ -2215,11 +3709,16 @@
       $("panel-home").classList.toggle("active", name === "home");
       $("panel-providers").classList.toggle("active", name === "providers");
       $("panel-routes").classList.toggle("active", name === "routes");
+      $("panel-settings").classList.toggle("active", name === "settings");
+      $("panel-learn").classList.toggle("active", name === "learn");
       $("panel-provider-form").classList.toggle("active", name === "provider-form");
       document.querySelector(".content")?.classList.toggle("wide", name === "provider-form");
+      document.querySelector(".content")?.classList.toggle("learn-wide", name === "learn");
       if (name === "home") loadMetrics().catch(() => {});
       if (name === "providers") renderProviders();
       if (name === "routes") renderMap();
+      if (name === "settings") loadAuthSettings().catch((e) => toast(e.message));
+      if (name === "learn") initLearn();
     }
 
     function destroyChart(key) {
@@ -2690,9 +4189,890 @@
       }
     };
 
+    /* ——— Users & API keys ——— */
+    let scopeCatalog = [];
+
+    async function loadScopeCatalog() {
+      if (scopeCatalog.length) return scopeCatalog;
+      const data = await api("/admin/auth/scopes");
+      scopeCatalog = data.scopes || [];
+      return scopeCatalog;
+    }
+
+    function scopeLabel(value) {
+      if (value === "*") return "All APIs";
+      const hit = scopeCatalog.find((s) => s.value === value);
+      return hit ? hit.label : value;
+    }
+
+    function renderScopeChecks(containerId, selected) {
+      const selectedSet = new Set(selected && selected.length ? selected : []);
+      const allChecked = selectedSet.has("*");
+      const box = $(containerId);
+      const items = [
+        { value: "*", label: "All APIs", endpoint: "Every operation on the API map", group: "all" },
+        ...scopeCatalog,
+      ];
+      box.innerHTML = items.map((s) => `
+        <label class="scope-item">
+          <input type="checkbox" value="${escapeHtml(s.value)}" ${
+            allChecked ? (s.value === "*" ? "checked" : "") : (selectedSet.has(s.value) ? "checked" : "")
+          } ${allChecked && s.value !== "*" ? "disabled" : ""}/>
+          <span><strong>${escapeHtml(s.label)}</strong><small>${escapeHtml(s.endpoint || "")}</small></span>
+        </label>
+      `).join("");
+      box.querySelectorAll('input[type="checkbox"]').forEach((inp) => {
+        inp.onchange = () => {
+          if (inp.value === "*") {
+            box.querySelectorAll('input[type="checkbox"]').forEach((o) => {
+              if (o.value !== "*") { o.checked = false; o.disabled = inp.checked; }
+            });
+          }
+        };
+      });
+    }
+
+    function readScopeChecks(containerId) {
+      return [...$(containerId).querySelectorAll("input:checked")].map((i) => i.value);
+    }
+
+    let usersPage = 1;
+    const USERS_PAGE_SIZE = 8;
+    let usersSearchTimer = 0;
+
+    async function loadAuthSettings() {
+      const q = ($("su-search")?.value || "").trim();
+      const role = $("su-filter-role")?.value || "";
+      const params = new URLSearchParams({
+        page: String(usersPage),
+        page_size: String(USERS_PAGE_SIZE),
+      });
+      if (q) params.set("q", q);
+      if (role) params.set("role", role);
+      const data = await api(`/admin/auth/users?${params.toString()}`);
+      const items = data.items || [];
+      if (data.page && data.page !== usersPage) usersPage = data.page;
+      renderSystemUsers(items);
+      renderUsersPager(data);
+    }
+
+    function renderUsersPager(data) {
+      const el = $("su-pager");
+      const total = data.total || 0;
+      const page = data.page || 1;
+      const pages = data.pages || 0;
+      const size = data.page_size || USERS_PAGE_SIZE;
+      if (!total) { el.hidden = true; el.innerHTML = ""; return; }
+      el.hidden = false;
+      const from = (page - 1) * size + 1;
+      const to = Math.min(page * size, total);
+      const buttons = [];
+      buttons.push(`<button type="button" data-page="${page - 1}" ${page <= 1 ? "disabled" : ""}>Prev</button>`);
+      const windowSize = 5;
+      let start = Math.max(1, page - 2);
+      let end = Math.min(pages, start + windowSize - 1);
+      start = Math.max(1, end - windowSize + 1);
+      if (start > 1) buttons.push(`<button type="button" data-page="1">1</button>`);
+      if (start > 2) buttons.push(`<span class="meta">…</span>`);
+      for (let i = start; i <= end; i++) {
+        buttons.push(`<button type="button" data-page="${i}" class="${i === page ? "active" : ""}">${i}</button>`);
+      }
+      if (end < pages - 1) buttons.push(`<span class="meta">…</span>`);
+      if (end < pages) buttons.push(`<button type="button" data-page="${pages}">${pages}</button>`);
+      buttons.push(`<button type="button" data-page="${page + 1}" ${page >= pages ? "disabled" : ""}>Next</button>`);
+      el.innerHTML = `<div class="meta">${from}–${to} of ${total}</div><div class="pager-btns">${buttons.join("")}</div>`;
+      el.querySelectorAll("button[data-page]").forEach((btn) => {
+        btn.onclick = () => {
+          const next = Number(btn.dataset.page);
+          if (!next || next === usersPage) return;
+          usersPage = next;
+          loadAuthSettings().catch((e) => toast(e.message));
+        };
+      });
+    }
+
+    function roleLabel(role, isAdmin) {
+      const r = (role || (isAdmin ? "admin" : "b2b")).toLowerCase();
+      return ({ admin: "Admin", b2b: "B2B", b2c: "B2C" })[r] || r;
+    }
+
+    function generateLocalApiKey() {
+      const bytes = crypto.getRandomValues(new Uint8Array(32));
+      let bin = "";
+      bytes.forEach((b) => { bin += String.fromCharCode(b); });
+      const body = btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+      return `sk_live_${body}`;
+    }
+
+    function scopeBadges(scopes) {
+      const list = scopes && scopes.length ? scopes : [];
+      if (!list.length) return `<span class="sub">No APIs</span>`;
+      if (list.includes("*")) return `<span class="badge navy">All APIs</span>`;
+      return `<div class="user-key-apis">${list.map((s) => `<span class="badge navy">${escapeHtml(scopeLabel(s))}</span>`).join("")}</div>`;
+    }
+
+    function renderSystemUsers(users) {
+      const tbody = $("su-table");
+      if (!users.length) {
+        tbody.innerHTML = `<tr><td colspan="5" class="empty">No users</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = users.map((u) => {
+        const perms = u.role === "admin"
+          ? `<span class="sub">Dashboard login</span>`
+          : (u.api_key || (u.api_key_scopes && u.api_key_scopes.length)
+            ? scopeBadges(u.api_key_scopes)
+            : `<span class="sub">No key</span>`);
+        const actions = [];
+        if (u.role !== "admin" && u.api_key) {
+          actions.push(`<button type="button" class="btn btn-sm btn-action-show" data-su-show="${u.id}">Show key</button>`);
+        }
+        if (u.role !== "admin") {
+          actions.push(`<button type="button" class="btn btn-sm btn-action-edit" data-su-key="${u.id}">Edit key</button>`);
+        }
+        actions.push(`<button type="button" class="btn btn-sm ${u.is_active ? "btn-action-off" : "btn-action-on"}" data-su-toggle="${u.id}" data-active="${u.is_active}">${u.is_active ? "Disable" : "Enable"}</button>`);
+        return `
+        <tr>
+          <td>
+            <strong>${escapeHtml(u.username)}</strong>
+            <div class="sub">${escapeHtml(u.email)}</div>
+            ${u.description ? `<div class="sub">${escapeHtml(u.description)}</div>` : ""}
+          </td>
+          <td><span class="badge blue">${escapeHtml(roleLabel(u.role, u.is_admin))}</span></td>
+          <td>${perms}</td>
+          <td><span class="badge ${u.is_active ? "on" : "off"}">${u.is_active ? "Active" : "Off"}</span></td>
+          <td><div class="user-row-actions">${actions.join("")}</div></td>
+        </tr>`;
+      }).join("");
+      tbody.querySelectorAll("[data-su-toggle]").forEach((btn) => {
+        btn.onclick = async () => {
+          const active = btn.dataset.active === "true";
+          await api(`/admin/auth/users/${btn.dataset.suToggle}`, {
+            method: "PATCH",
+            body: JSON.stringify({ is_active: !active }),
+          });
+          toast(active ? "User disabled" : "User enabled");
+          await loadAuthSettings();
+        };
+      });
+      tbody.querySelectorAll("[data-su-key]").forEach((btn) => {
+        btn.onclick = () => openUserKeyEditor(users.find((u) => String(u.id) === btn.dataset.suKey));
+      });
+      tbody.querySelectorAll("[data-su-show]").forEach((btn) => {
+        btn.onclick = () => openUserKeyViewer(users.find((u) => String(u.id) === btn.dataset.suShow));
+      });
+    }
+
+    function openUserKeyViewer(user) {
+      if (!user?.api_key) {
+        toast("No API key stored");
+        return;
+      }
+      $("usk-hint").textContent = `Key for ${user.username}. Send it as X-API-Key.`;
+      $("usk-secret").textContent = user.api_key;
+      $("user-show-key-modal").showModal();
+    }
+
+    async function openUserKeyEditor(user) {
+      if (!user) return;
+      await loadScopeCatalog();
+      $("uk-user-id").value = String(user.id);
+      $("uk-api-key").value = user.api_key || "";
+      $("user-key-hint").textContent = user.api_key
+        ? `Key for ${user.username}. Edit it, generate a new one, or change allowed APIs.`
+        : `No stored key for ${user.username}. Paste one or generate, then choose APIs.`;
+      renderScopeChecks("uk-scopes", user.api_key_scopes || ["*"]);
+      $("user-key-modal").showModal();
+    }
+
+    /* ——— Learn module (story + junior diagrams) ——— */
+    const STORY_CHAPTERS = [
+      {
+        title: "Too many airplane shops",
+        short: "Why we need a helper",
+        eyebrow: "Chapter 1 · Meet Sky",
+        hero: "You want a flight. Each airline talks differently. That would be confusing!",
+        board: "Sky asks for you",
+        coachTitle: "Sky says",
+        coach: "Watch me take your wish, ask every airplane shop, and bring back one clear answer. Grown-ups call me an aggregator!",
+        hint: "Tiny quiz — tap the best answer for a star!",
+        after: "See? One letter from you. Many shops. One neat answer back. That’s my job!",
+        playLabel: "▶ Watch the story",
+        idleStatus: "Tap Watch the story",
+        quiz: {
+          q: "What is Sky’s special job?",
+          options: [
+            "Ask many airlines so you don’t have to",
+            "Build real airplanes",
+            "Hide all the flights forever",
+          ],
+          answer: 0,
+        },
+      },
+      {
+        title: "Sky’s four magic steps",
+        short: "Listen → ask → mix → tell",
+        eyebrow: "Chapter 2 · How helpers work",
+        hero: "Every time you search, I do four friendly steps — like a recipe!",
+        board: "Recipe for answers",
+        coachTitle: "Sky says",
+        coach: "First I listen. Then I ask. Then I mix. Then I tell you. Mapping in Providers is how grown-ups teach me each shop’s language.",
+        hint: "Which step makes every answer look the same?",
+        after: "Step 3 is the mixing magic — that’s how messy replies become one list!",
+        playLabel: "▶ Watch the story",
+        idleStatus: "Tap Watch the story",
+        quiz: {
+          q: "Which step makes answers look the same?",
+          options: ["Ask every shop", "Mix the answers", "Build a runway"],
+          answer: 1,
+        },
+      },
+      {
+        title: "POST is mailing a letter",
+        short: "APIs send packages",
+        eyebrow: "Chapter 3 · What is an API?",
+        hero: "An API is a polite way computers ask each other for help. POST means “please take this letter.”",
+        board: "Mailbox lesson",
+        coachTitle: "Sky says",
+        coach: "You put from, to, and date inside the letter. The computer mailbox reads it and writes back. That back-and-forth is an API!",
+        hint: "Where do from & to live in a POST?",
+        after: "Yay! The letter went out, and flights came back. POST = send a package with words inside.",
+        playLabel: "▶ Watch the story",
+        idleStatus: "Tap Watch the story",
+        quiz: {
+          q: "Where do from & to live in a POST?",
+          options: ["Only on the stamp", "Inside the letter (the body)", "In the airplane seat"],
+          answer: 1,
+        },
+      },
+      {
+        title: "SOAP is a fancy folder",
+        short: "Same mail, special wrap",
+        eyebrow: "Chapter 4 · SOAP",
+        hero: "Some shops want the letter inside a fancy folder. That folder is called SOAP.",
+        board: "Open the folder",
+        coachTitle: "Sky says",
+        coach: "It’s still mailing (POST)! SOAP just wraps the message in a special envelope. I build that wrap so you don’t have to.",
+        hint: "What makes SOAP special?",
+        after: "Folder open! Same question inside — just dressed up for shops that like SOAP.",
+        playLabel: "▶ Watch the story",
+        idleStatus: "Tap Watch the story",
+        quiz: {
+          q: "What makes SOAP special?",
+          options: [
+            "It uses a fancy folder (envelope) for the message",
+            "It only works on Sundays",
+            "It deletes all flights",
+          ],
+          answer: 0,
+        },
+      },
+      {
+        title: "The flight adventure",
+        short: "Look → hold → ticket → trip",
+        eyebrow: "Chapter 5 · The whole trip",
+        hero: "Finding a flight is an adventure with four stamps. Collect them all!",
+        board: "Adventure stamps",
+        coachTitle: "Sky says",
+        coach: "Look for flights, hold a seat, get the ticket, then see your trip. Each stamp is a real API type in Providers!",
+        hint: "What comes after holding a seat?",
+        after: "Adventure complete! You’re ready to explore the real console.",
+        playLabel: "▶ Watch the story",
+        idleStatus: "Tap Watch the story",
+        quiz: {
+          q: "After you hold a seat, what’s next?",
+          options: ["Throw the ticket away", "Get the ticket", "Restart the computer"],
+          answer: 1,
+        },
+      },
+    ];
+
+    const JUNIOR_CHAPTERS = [
+      {
+        title: "Aggregator architecture",
+        short: "App → hub → providers",
+        eyebrow: "Junior 1 · System diagram",
+        hero: "Your app talks to one aggregator. The aggregator fans out to REST and SOAP providers, then merges results.",
+        board: "Architecture diagram",
+        coachTitle: "For juniors",
+        coach: "Press Play to watch the request path light up. This is the adapter pattern in production form.",
+        hint: "Quiz: what does your app need to know about each airline?",
+        after: "Client stays stable. Providers can change behind mapping + adapters.",
+        playLabel: "▶ Animate diagram",
+        idleStatus: "Press Play to animate",
+        quiz: {
+          q: "What should your app know about each airline’s API?",
+          options: [
+            "Nothing specific — only the aggregator contract",
+            "Every SOAP namespace by heart",
+            "Each airline’s private password UI",
+          ],
+          answer: 0,
+        },
+      },
+      {
+        title: "What a POST API looks like",
+        short: "HTTP method + JSON body",
+        eyebrow: "Junior 2 · REST POST anatomy",
+        hero: "A POST request is: start line + headers + JSON body. The response is status + headers + JSON.",
+        board: "POST request / response",
+        coachTitle: "For juniors",
+        coach: "Watch each part appear. This is the shape you’ll see in DevTools, curl, and our Try panel.",
+        hint: "Quiz: where do origin & destination usually live?",
+        after: "Remember: POST carries a body. That’s why search/reserve/ticket use POST here.",
+        playLabel: "▶ Build the POST",
+        idleStatus: "Press Play to build the POST",
+        quiz: {
+          q: "In a search POST, where do origin & destination live?",
+          options: ["Only in the Host header", "In the JSON body", "In the TLS certificate"],
+          answer: 1,
+        },
+      },
+      {
+        title: "What a SOAP API looks like",
+        short: "XML envelope on HTTP POST",
+        eyebrow: "Junior 3 · SOAP anatomy",
+        hero: "SOAP is still HTTP POST, but the body is an XML Envelope with optional Header and a Body operation.",
+        board: "SOAP envelope layers",
+        coachTitle: "For juniors",
+        coach: "Play to peel the layers: Envelope → Header → Body/operation. Note SOAPAction and text/xml.",
+        hint: "Quiz: how do you pick the SOAP operation?",
+        after: "In Providers, SOAP mapping fills those XML fields — you rarely hand-write the envelope.",
+        playLabel: "▶ Peel the envelope",
+        idleStatus: "Press Play to peel layers",
+        quiz: {
+          q: "How is the SOAP operation usually chosen?",
+          options: [
+            "Random query string",
+            "SOAPAction header + method inside Body",
+            "Only the browser title",
+          ],
+          answer: 1,
+        },
+      },
+      {
+        title: "POST vs SOAP side by side",
+        short: "Same road, different cargo",
+        eyebrow: "Junior 4 · Compare",
+        hero: "Both often use HTTP POST. REST usually sends JSON; SOAP sends an XML envelope. Spot the difference in the samples.",
+        board: "Comparison diagram",
+        coachTitle: "For juniors",
+        coach: "If you see curly braces, think REST/JSON. If you see soap:Envelope, think SOAP/XML.",
+        hint: "Quiz: which statement is true?",
+        after: "Sky Nepal speaks JSON to you, then translates to whichever provider dialect is configured.",
+        playLabel: "▶ Compare",
+        idleStatus: "Press Play to compare",
+        quiz: {
+          q: "Which statement is true?",
+          options: [
+            "SOAP cannot use HTTP POST",
+            "REST POST and SOAP can both ride on HTTP POST",
+            "JSON and XML are the same format",
+          ],
+          answer: 1,
+        },
+      },
+    ];
+
+    let learnMode = "story";
+    let learnIdx = 0;
+    let learnDoneStory = new Set();
+    let learnDoneJunior = new Set();
+    let learnReady = false;
+    let learnGen = 0;
+
+    function learnChapters() {
+      return learnMode === "junior" ? JUNIOR_CHAPTERS : STORY_CHAPTERS;
+    }
+    function learnDoneSet() {
+      return learnMode === "junior" ? learnDoneJunior : learnDoneStory;
+    }
+
+    function sleep(ms, gen) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (gen !== learnGen) reject(new Error("cancelled"));
+          else resolve();
+        }, ms);
+      });
+    }
+
+    function applyLearnModeChrome() {
+      $("panel-learn")?.classList.toggle("jr-mode", learnMode === "junior");
+      $("learn-mode-story")?.classList.toggle("active", learnMode === "story");
+      $("learn-mode-junior")?.classList.toggle("active", learnMode === "junior");
+      $("learn-track-story")?.classList.toggle("active", learnMode === "story");
+      $("learn-track-junior")?.classList.toggle("active", learnMode === "junior");
+      if (learnMode === "junior") {
+        $("learn-page-title").textContent = "Junior API diagrams";
+        $("learn-page-sub").textContent = "Visual anatomy of the aggregator, REST POST, and SOAP — what they look like in real traffic.";
+        $("learn-guide-name").textContent = "Junior track";
+        $("learn-guide-tag").textContent = "Labeled diagrams + quizzes";
+        $("learn-rail-h").textContent = "Diagrams";
+        $("learn-replay").textContent = "Replay";
+      } else {
+        $("learn-page-title").textContent = "Story time with Sky";
+        $("learn-page-sub").textContent = "A friendly guide to how flight helpers, APIs, POST, and SOAP work — told like a picture book.";
+        $("learn-guide-name").textContent = "Sky the helper";
+        $("learn-guide-tag").textContent = "I’ll explain it simply!";
+        $("learn-rail-h").textContent = "Our adventure";
+        $("learn-replay").textContent = "Again!";
+      }
+    }
+
+    function setLearnMode(mode) {
+      const next = mode === "junior" ? "junior" : "story";
+      if (next !== learnMode) learnIdx = 0;
+      learnMode = next;
+      learnGen += 1;
+      applyLearnModeChrome();
+      goLearn(learnIdx);
+    }
+
+    function initLearn() {
+      if (!learnReady) {
+        $("learn-play").onclick = () => playLearnScene().catch(() => {});
+        $("learn-replay").onclick = () => playLearnScene().catch(() => {});
+        $("learn-prev").onclick = () => goLearn(learnIdx - 1);
+        $("learn-mode-story").onclick = () => setLearnMode("story");
+        $("learn-mode-junior").onclick = () => setLearnMode("junior");
+        learnReady = true;
+      }
+      applyLearnModeChrome();
+      goLearn(learnIdx);
+    }
+
+    function renderLearnChapters() {
+      const chapters = learnChapters();
+      const done = learnDoneSet();
+      const root = $("learn-chapters");
+      root.innerHTML = chapters.map((c, i) => `
+        <button type="button" data-learn="${i}" class="${i === learnIdx ? "active" : ""} ${done.has(i) ? "done" : ""}">
+          <span class="n">${done.has(i) ? "★" : i + 1}</span>
+          <span><strong>${c.title}</strong><span class="sub">${c.short}</span></span>
+        </button>
+      `).join("");
+      root.querySelectorAll("[data-learn]").forEach((btn) => {
+        btn.onclick = () => goLearn(Number(btn.dataset.learn));
+      });
+      const pct = (done.size / chapters.length) * 100;
+      $("learn-progress-bar").style.width = `${pct}%`;
+      $("learn-progress-label").textContent = learnMode === "junior"
+        ? `${done.size} of ${chapters.length} diagrams done`
+        : `${done.size} of ${chapters.length} stars`;
+    }
+
+    function goLearn(i) {
+      const chapters = learnChapters();
+      if (i < 0 || i >= chapters.length) return;
+      learnGen += 1;
+      learnIdx = i;
+      const c = chapters[i];
+      $("learn-eyebrow").textContent = c.eyebrow;
+      $("learn-title").textContent = c.title;
+      $("learn-lead").textContent = c.hero;
+      $("learn-board-title").textContent = c.board;
+      $("learn-board-status").textContent = c.idleStatus || "Press Play";
+      $("learn-coach-title").textContent = c.coachTitle;
+      $("learn-coach-body").textContent = c.coach;
+      $("learn-coach-hint").textContent = c.hint;
+      $("learn-play").textContent = c.playLabel || "▶ Play";
+      $("learn-prev").disabled = i === 0;
+      $("learn-next").textContent = i === chapters.length - 1 ? "Finished!" : "Next →";
+      $("learn-next").onclick = () => {
+        if (i === chapters.length - 1) {
+          learnDoneSet().add(i);
+          renderLearnChapters();
+          $("learn-coach-hint").textContent = learnMode === "junior"
+            ? "Nice — try Story mode too, or open Providers and wire a real endpoint."
+            : "You did it! When you’re ready, open Providers and teach Sky a real airline.";
+          toast(learnMode === "junior" ? "Junior diagrams complete" : "All stars collected!");
+          return;
+        }
+        goLearn(i + 1);
+      };
+
+      if (learnMode === "story") {
+        $("learn-track-story").querySelectorAll(".learn-scene").forEach((el) => {
+          el.classList.toggle("active", Number(el.dataset.scene) === i);
+        });
+      } else {
+        $("learn-track-junior").querySelectorAll(".learn-scene").forEach((el) => {
+          el.classList.toggle("active", Number(el.dataset.jrScene) === i);
+        });
+      }
+      resetLearnScene(i);
+      renderLearnQuiz(c);
+      renderLearnChapters();
+    }
+
+    function renderLearnQuiz(c) {
+      const box = $("learn-quiz");
+      const chapters = learnChapters();
+      if (!c.quiz) { box.classList.remove("show"); box.innerHTML = ""; return; }
+      box.classList.add("show");
+      box.innerHTML = `<div class="q">${c.quiz.q}</div>` + c.quiz.options.map((opt, idx) =>
+        `<button type="button" data-ans="${idx}">${opt}</button>`
+      ).join("");
+      box.querySelectorAll("[data-ans]").forEach((btn) => {
+        btn.onclick = () => {
+          const ok = Number(btn.dataset.ans) === c.quiz.answer;
+          box.querySelectorAll("button").forEach((b) => {
+            b.disabled = true;
+            const ans = Number(b.dataset.ans);
+            if (ans === c.quiz.answer) b.classList.add("correct");
+            else if (b === btn && !ok) b.classList.add("wrong");
+          });
+          if (ok) {
+            learnDoneSet().add(learnIdx);
+            renderLearnChapters();
+            $("learn-coach-hint").textContent = learnMode === "junior"
+              ? "Correct — diagram marked done. Next when ready."
+              : "Star earned! Ready for the next chapter?";
+          } else {
+            $("learn-coach-hint").textContent = "Not quite — replay the diagram, then try again.";
+            setTimeout(() => {
+              if (learnIdx === chapters.indexOf(c)) renderLearnQuiz(c);
+            }, 1500);
+          }
+        };
+      });
+    }
+
+    function resetLearnScene(i) {
+      if (learnMode === "story") {
+        if (i === 0) {
+          $("learn-agg-nodes")?.querySelectorAll(".learn-char").forEach((n) => n.classList.remove("lit"));
+          const pkt = $("learn-packet-0");
+          if (pkt) { pkt.classList.remove("fly"); pkt.style.cssText = ""; }
+        }
+        if (i === 1) {
+          $("learn-stack")?.querySelectorAll(".learn-step-card").forEach((el) => {
+            el.classList.remove("show", "lit-layer");
+          });
+        }
+        if (i === 2) {
+          if ($("learn-post-res-body")) $("learn-post-res-body").textContent = "Waiting for your letter…";
+        }
+        if (i === 3) $("learn-envelope")?.classList.remove("open");
+        if (i === 4) {
+          $("learn-booking-flow")?.querySelectorAll(".learn-stamp").forEach((el) => {
+            el.classList.remove("on", "done-pill");
+          });
+          $("learn-booking-flow")?.querySelectorAll(".learn-adv-arrow").forEach((el) => el.classList.remove("on"));
+          if ($("learn-flow-caption")) $("learn-flow-caption").textContent = "Ready for takeoff";
+        }
+        return;
+      }
+      // junior resets
+      if (i === 0) {
+        $("jr-arch-flow")?.querySelectorAll(".jr-box,.jr-arrow,.mini").forEach((el) => el.classList.remove("lit", "on"));
+      }
+      if (i === 1) {
+        $("jr-http")?.querySelectorAll(".jr-part").forEach((el) => el.classList.remove("show", "lit"));
+      }
+      if (i === 2) {
+        $("jr-soap")?.querySelectorAll(".jr-soap-layer,.jr-callout").forEach((el) => {
+          el.classList.remove("show", "lit");
+        });
+      }
+      if (i === 3) {
+        $("jr-compare")?.querySelectorAll(".jr-compare-card").forEach((el) => {
+          el.classList.remove("show", "lit");
+        });
+      }
+    }
+
+    async function playLearnScene() {
+      const gen = ++learnGen;
+      const chapters = learnChapters();
+      $("learn-board-status").textContent = learnMode === "junior" ? "Animating…" : "Story playing…";
+      resetLearnScene(learnIdx);
+      try {
+        if (learnMode === "story") {
+          if (learnIdx === 0) await animAggFanout(gen);
+          else if (learnIdx === 1) await animPipeline(gen);
+          else if (learnIdx === 2) await animPost(gen);
+          else if (learnIdx === 3) await animSoap(gen);
+          else if (learnIdx === 4) await animBooking(gen);
+        } else {
+          if (learnIdx === 0) await animJrArch(gen);
+          else if (learnIdx === 1) await animJrPost(gen);
+          else if (learnIdx === 2) await animJrSoap(gen);
+          else if (learnIdx === 3) await animJrCompare(gen);
+        }
+        if (gen === learnGen) {
+          $("learn-board-status").textContent = learnMode === "junior"
+            ? "Diagram ready — try the quiz"
+            : "Story done — try the quiz!";
+          const c = chapters[learnIdx];
+          if (c.after) $("learn-coach-body").textContent = c.after;
+        }
+      } catch (e) {
+        if (e?.message !== "cancelled") throw e;
+      }
+    }
+
+    function flyPacket(el, fromSel, toSel, label, gen) {
+      const canvas = $("learn-canvas");
+      const from = canvas.querySelector(fromSel);
+      const to = canvas.querySelector(toSel);
+      if (!el || !from || !to) return sleep(0, gen);
+      const cr = canvas.getBoundingClientRect();
+      const a = from.getBoundingClientRect();
+      const b = to.getBoundingClientRect();
+      const x0 = a.left + a.width / 2 - cr.left - 26;
+      const y0 = a.top + a.height / 2 - cr.top - 18;
+      const x1 = b.left + b.width / 2 - cr.left - 26;
+      const y1 = b.top + b.height / 2 - cr.top - 18;
+      el.textContent = label;
+      el.style.left = `${x0}px`;
+      el.style.top = `${y0}px`;
+      el.style.setProperty("--dx", `${x1 - x0}px`);
+      el.style.setProperty("--dy", `${y1 - y0}px`);
+      el.classList.remove("fly");
+      void el.offsetWidth;
+      el.classList.add("fly");
+      return sleep(1550, gen);
+    }
+
+    async function animAggFanout(gen) {
+      const nodes = $("learn-agg-nodes");
+      const pkt = $("learn-packet-0");
+      const lit = (key, on = true) => {
+        const n = nodes.querySelector(`[data-node="${key}"]`);
+        if (n) n.classList.toggle("lit", on);
+      };
+      lit("app"); await sleep(450, gen);
+      await flyPacket(pkt, '[data-node="app"]', '[data-node="hub"]', "Wish!", gen);
+      lit("app", false); lit("hub"); await sleep(350, gen);
+      for (const [p, label] of [["p1", "Ask A"], ["p2", "Ask B"], ["p3", "Ask C"]]) {
+        lit(p);
+        await flyPacket(pkt, '[data-node="hub"]', `[data-node="${p}"]`, label, gen);
+        await sleep(160, gen);
+      }
+      await sleep(280, gen);
+      await flyPacket(pkt, '[data-node="hub"]', '[data-node="app"]', "Flights!", gen);
+      lit("app");
+    }
+
+    async function animPipeline(gen) {
+      const layers = [...($("learn-stack")?.querySelectorAll(".learn-step-card") || [])];
+      for (const layer of layers) {
+        layers.forEach((l) => l.classList.remove("lit-layer"));
+        layer.classList.add("show", "lit-layer");
+        await sleep(780, gen);
+      }
+      layers.forEach((l) => l.classList.add("show"));
+    }
+
+    async function animPost(gen) {
+      $("learn-board-status").textContent = "Letter flying…";
+      await sleep(800, gen);
+      if (gen !== learnGen) return;
+      $("learn-post-res-body").innerHTML = `Here are flights!<br/>Morning · Rs 4500<br/>Afternoon · Rs 5200<span class="tiny">Grown-up word: this reply is JSON</span>`;
+    }
+
+    async function animSoap(gen) {
+      $("learn-board-status").textContent = "Opening the fancy folder…";
+      await sleep(500, gen);
+      if (gen !== learnGen) return;
+      $("learn-envelope")?.classList.add("open");
+      await sleep(900, gen);
+    }
+
+    async function animBooking(gen) {
+      const steps = [
+        "Looking in every shop…",
+        "Holding your seat…",
+        "Printing your ticket…",
+        "Here’s your trip map!",
+      ];
+      const pills = [...($("learn-booking-flow")?.querySelectorAll(".learn-stamp") || [])];
+      const arrows = [...($("learn-booking-flow")?.querySelectorAll(".learn-adv-arrow") || [])];
+      for (let s = 0; s < pills.length; s++) {
+        pills.forEach((p, idx) => {
+          p.classList.toggle("on", idx === s);
+          p.classList.toggle("done-pill", idx < s);
+        });
+        arrows.forEach((a, idx) => a.classList.toggle("on", idx < s));
+        if ($("learn-flow-caption")) $("learn-flow-caption").textContent = steps[s];
+        await sleep(900, gen);
+      }
+      if (gen !== learnGen) return;
+      pills.forEach((p) => { p.classList.add("done-pill"); p.classList.remove("on"); });
+      arrows.forEach((a) => a.classList.add("on"));
+      if ($("learn-flow-caption")) $("learn-flow-caption").textContent = "Adventure complete!";
+    }
+
+    async function animJrArch(gen) {
+      const flow = $("jr-arch-flow");
+      const lit = (sel, on = true) => flow.querySelector(sel)?.classList.toggle("lit", on);
+      const onArrow = (n, on = true) => flow.querySelector(`[data-jr-a="${n}"]`)?.classList.toggle("on", on);
+      lit('[data-jr="client"]'); await sleep(500, gen);
+      onArrow(0); lit('[data-jr="hub"]'); await sleep(550, gen);
+      onArrow(1); lit('[data-jr="providers"]');
+      for (const p of [0, 1, 2]) {
+        flow.querySelector(`[data-jr-p="${p}"]`)?.classList.add("lit");
+        await sleep(380, gen);
+      }
+    }
+
+    async function animJrPost(gen) {
+      const parts = ["line", "headers", "body", "status", "reshead", "resbody"];
+      for (const key of parts) {
+        const el = document.querySelector(`#jr-http [data-jr-part="${key}"]`);
+        if (!el) continue;
+        document.querySelectorAll("#jr-http .jr-part").forEach((p) => p.classList.remove("lit"));
+        el.classList.add("show", "lit");
+        await sleep(650, gen);
+      }
+      document.querySelectorAll("#jr-http .jr-part").forEach((p) => p.classList.add("show"));
+    }
+
+    async function animJrSoap(gen) {
+      const layers = ["env", "hdr", "body"];
+      for (const key of layers) {
+        const el = document.querySelector(`#jr-soap [data-jr-soap="${key}"]`);
+        document.querySelectorAll("#jr-soap .jr-soap-layer").forEach((l) => l.classList.remove("lit"));
+        el?.classList.add("show", "lit");
+        await sleep(700, gen);
+      }
+      for (const n of [0, 1, 2, 3]) {
+        const c = document.querySelector(`#jr-soap [data-jr-soap-c="${n}"]`);
+        c?.classList.add("show", "lit");
+        await sleep(420, gen);
+        c?.classList.remove("lit");
+      }
+      document.querySelectorAll("#jr-soap .jr-callout").forEach((c) => c.classList.add("show"));
+    }
+
+    async function animJrCompare(gen) {
+      const a = document.querySelector('#jr-compare [data-jr-cmp="0"]');
+      const b = document.querySelector('#jr-compare [data-jr-cmp="1"]');
+      a?.classList.add("show", "lit"); await sleep(700, gen);
+      b?.classList.add("show", "lit"); await sleep(700, gen);
+      a?.classList.remove("lit"); b?.classList.remove("lit");
+    }
+
     document.querySelectorAll(".nav-item").forEach((el) => el.onclick = () => showNav(el.dataset.nav));
     $("logout-btn").onclick = () => logout();
     $("header-add").onclick = openNewProvider;
+
+    function selectedUserRole() {
+      return document.querySelector('input[name="su-role"]:checked')?.value || "b2b";
+    }
+
+    function syncUserRoleFields() {
+      const admin = selectedUserRole() === "admin";
+      const wrap = $("su-password-wrap");
+      const input = $("su-password");
+      const keyPane = $("su-key-pane");
+      const keyInput = $("su-api-key");
+      wrap.hidden = !admin;
+      input.required = admin;
+      if (!admin) input.value = "";
+      keyPane.hidden = admin;
+      keyInput.required = !admin;
+      $("user-new-modal").classList.toggle("identity-only", admin);
+    }
+
+    $("su-new").onclick = async () => {
+      $("user-new-form").reset();
+      document.querySelectorAll('input[name="su-role"]').forEach((el) => { el.checked = el.value === "b2b"; });
+      $("su-active").checked = true;
+      $("su-api-key").value = generateLocalApiKey();
+      syncUserRoleFields();
+      await loadScopeCatalog();
+      renderScopeChecks("su-scopes", ["*"]);
+      $("user-new-modal").showModal();
+    };
+    document.querySelectorAll('input[name="su-role"]').forEach((el) => {
+      el.onchange = syncUserRoleFields;
+    });
+    $("su-cancel").onclick = () => $("user-new-modal").close();
+    $("su-cancel-2").onclick = () => $("user-new-modal").close();
+    $("su-key-gen").onclick = () => { $("su-api-key").value = generateLocalApiKey(); };
+    $("user-new-form").onsubmit = async (e) => {
+      e.preventDefault();
+      const role = selectedUserRole();
+      const password = $("su-password").value;
+      if (role === "admin" && password.trim().length < 6) {
+        toast("Password is required for admin users");
+        return;
+      }
+      const payload = {
+        username: $("su-username").value.trim(),
+        email: $("su-email").value.trim(),
+        role,
+        description: $("su-desc").value.trim() || null,
+        is_active: $("su-active").checked,
+      };
+      if (role === "admin") {
+        payload.password = password;
+      } else {
+        const scopes = readScopeChecks("su-scopes");
+        if (!scopes.length) { toast("Select at least one API"); return; }
+        payload.key_mode = "manual";
+        payload.api_key = $("su-api-key").value.trim();
+        payload.scopes = scopes;
+      }
+      try {
+        await api("/admin/auth/users", {
+          method: "POST",
+          body: JSON.stringify(payload),
+        });
+        $("user-new-modal").close();
+        toast("User created");
+        usersPage = 1;
+        await loadAuthSettings();
+      } catch (err) { toast(err.message); }
+    };
+    $("uk-cancel").onclick = () => $("user-key-modal").close();
+    $("uk-cancel-2").onclick = () => $("user-key-modal").close();
+    $("usk-close").onclick = () => $("user-show-key-modal").close();
+    $("usk-close-2").onclick = () => $("user-show-key-modal").close();
+    $("usk-copy").onclick = async () => {
+      const text = $("usk-secret").textContent || "";
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        toast("API key copied");
+      } catch {
+        toast("Could not copy");
+      }
+    };
+    $("uk-key-gen").onclick = () => { $("uk-api-key").value = generateLocalApiKey(); };
+    $("user-key-form").onsubmit = async (e) => {
+      e.preventDefault();
+      const scopes = readScopeChecks("uk-scopes");
+      if (!scopes.length) { toast("Select at least one API"); return; }
+      try {
+        await api(`/admin/auth/users/${$("uk-user-id").value}/api-key`, {
+          method: "POST",
+          body: JSON.stringify({
+            key_mode: "manual",
+            api_key: $("uk-api-key").value.trim(),
+            scopes,
+          }),
+        });
+        $("user-key-modal").close();
+        toast("API key saved");
+        await loadAuthSettings();
+      } catch (err) { toast(err.message); }
+    };
+    $("su-search").oninput = () => {
+      clearTimeout(usersSearchTimer);
+      usersSearchTimer = setTimeout(() => {
+        usersPage = 1;
+        loadAuthSettings().catch((e) => toast(e.message));
+      }, 250);
+    };
+    $("su-filter-role").onchange = () => {
+      usersPage = 1;
+      loadAuthSettings().catch((e) => toast(e.message));
+    };
+
     $("new-provider-btn").onclick = openNewProvider;
     $("refresh-metrics").onclick = () => loadMetrics().then(() => toast("Updated"));
     $("metrics-hours").onchange = () => loadMetrics();

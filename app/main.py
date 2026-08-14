@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.api.v1 import api_router
@@ -14,6 +14,7 @@ from app.core.logging import get_logger, setup_logging
 settings = get_settings()
 logger = get_logger(__name__)
 STATIC_DIR = Path(__file__).resolve().parent / "static"
+ADMIN_HTML = STATIC_DIR / "admin.html"
 
 
 @asynccontextmanager
@@ -51,6 +52,13 @@ async def health() -> dict[str, str]:
     return {"status": "ok", "service": settings.app_name}
 
 
+@app.get("/", include_in_schema=False)
+async def root() -> RedirectResponse:
+    """Open the admin console by default (login UI if not authenticated)."""
+    return RedirectResponse(url="/admin", status_code=307)
+
+
 @app.get("/admin", tags=["Admin UI"], include_in_schema=False)
+@app.get("/admin/", tags=["Admin UI"], include_in_schema=False)
 async def admin_panel() -> FileResponse:
-    return FileResponse(STATIC_DIR / "admin.html")
+    return FileResponse(ADMIN_HTML)
