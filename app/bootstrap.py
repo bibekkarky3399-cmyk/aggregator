@@ -5,7 +5,10 @@ from sqlalchemy import select, text
 from app.config import get_settings
 from app.core.logging import get_logger
 from app.database import AsyncSessionLocal, Base, engine
+from app.models import api_client as _api_client_models  # noqa: F401 — register tables
 from app.models.provider import ApiType, AuthType, HttpMethod, Provider, ProviderKind
+from app.models.user import User  # noqa: F401
+from app.repositories.api_client_repository import AuthSettingsRepository
 from app.repositories.user_repository import UserRepository
 from app.schemas.provider import ProviderCreate
 
@@ -290,23 +293,44 @@ async def _ensure_sqlite_columns(connection) -> None:
         return
     result = await connection.execute(text("PRAGMA table_info(providers)"))
     rows = result.fetchall()
-    if not rows:
-        return
-    existing = {row[1] for row in rows}
-    if "provider_kind" not in existing:
-        await connection.execute(
-            text(
-                "ALTER TABLE providers ADD COLUMN provider_kind VARCHAR(32) "
-                "DEFAULT 'airline' NOT NULL"
+    if rows:
+        existing = {row[1] for row in rows}
+        if "provider_kind" not in existing:
+            await connection.execute(
+                text(
+                    "ALTER TABLE providers ADD COLUMN provider_kind VARCHAR(32) "
+                    "DEFAULT 'airline' NOT NULL"
+                )
             )
-        )
-    if "api_type" not in existing:
-        await connection.execute(
-            text(
-                "ALTER TABLE providers ADD COLUMN api_type VARCHAR(32) "
-                "DEFAULT 'flight_search' NOT NULL"
+        if "api_type" not in existing:
+            await connection.execute(
+                text(
+                    "ALTER TABLE providers ADD COLUMN api_type VARCHAR(32) "
+                    "DEFAULT 'flight_search' NOT NULL"
+                )
             )
-        )
+
+    users_info = await connection.execute(text("PRAGMA table_info(users)"))
+    user_cols = {row[1] for row in users_info.fetchall()}
+    if user_cols:
+        if "role" not in user_cols:
+            await connection.execute(
+                text("ALTER TABLE users ADD COLUMN role VARCHAR(32) DEFAULT 'admin' NOT NULL")
+            )
+            await connection.execute(
+                text("UPDATE users SET role = 'admin' WHERE is_admin = 1")
+            )
+            await connection.execute(
+                text("UPDATE users SET role = 'b2b' WHERE is_admin = 0")
+            )
+        if "description" not in user_cols:
+            await connection.execute(text("ALTER TABLE users ADD COLUMN description TEXT"))
+        await connection.execute(text("UPDATE users SET role = 'b2b' WHERE role = 'operator'"))
+
+    keys_info = await connection.execute(text("PRAGMA table_info(api_keys)"))
+    key_cols = {row[1] for row in keys_info.fetchall()}
+    if key_cols and "key_secret" not in key_cols:
+        await connection.execute(text("ALTER TABLE api_keys ADD COLUMN key_secret TEXT"))
 
 
 async def _normalize_provider_classifications(connection) -> None:
@@ -421,6 +445,8 @@ async def init_db() -> None:
                 password=settings.admin_password,
             )
             logger.info("Bootstrap admin user created: %s", settings.admin_username)
+
+        await AuthSettingsRepository(session).ensure_defaults()
 
         await _prune_non_us_providers(session)
         await session.flush()

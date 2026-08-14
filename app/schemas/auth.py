@@ -17,5 +17,7 @@ class UserResponse(BaseModel):
     email: EmailStr
     is_active: bool
     is_admin: bool
+    role: str = "b2b"
+    description: str | None = None
 
     model_config = {"from_attributes": True}
