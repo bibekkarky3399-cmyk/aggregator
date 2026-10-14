@@ -39,6 +39,7 @@ regexes = [
   '''\$\{[A-Z_]+\}''',
   '''\$auth\.[a-z_]+''',
   '''REDACTED''',
+  '''^demo''',
   '''admin123''',
   '''example''',
 ]
