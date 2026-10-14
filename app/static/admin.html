@@ -4101,10 +4101,10 @@ Content-Type: text/xml
         if ((key === "generic" || key === "united_solutions") && (auth.value.trim() === "{}" || !auth.value.trim())) {
           // SOAP sample template for generic adapter
           auth.value = JSON.stringify({
-            user_id: "REDACTED",
-            password: "REDACTED",
-            agency_id: "REDACTED",
-            client_ip: "REDACTED",
+            user_id: "",
+            password: "",
+            agency_id: "",
+            client_ip: "",
             endpoint: "http://dev.usbooking.org/us/UnitedSolutions",
             soap: {
               namespace: "http://booking.us.org/",

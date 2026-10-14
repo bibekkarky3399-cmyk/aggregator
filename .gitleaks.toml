@@ -1,0 +1,44 @@
+# Secret scanning rules for the aggregator.
+# Runs in pre-commit (local) and in CI on every push and pull request.
+# Extends gitleaks' built-in rules with the secrets this platform handles.
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "aggregator-agency-api-key"
+description = "Agency API key issued by the aggregator"
+regex = '''\bsk_(live|test|sandbox)_[A-Za-z0-9_\-]{32,}\b'''
+keywords = ["sk_live_", "sk_test_", "sk_sandbox_"]
+
+[[rules]]
+id = "supplier-credential-field"
+description = "Supplier login value in JSON, YAML or Python (password / agency_id / user_id)"
+regex = '''(?i)["']?(password|passwd|agency_id|user_id|secret_key|api_secret)["']?\s*[:=]\s*["']([^"'\s]{4,})["']'''
+secretGroup = 2
+keywords = ["password", "passwd", "agency_id", "user_id", "secret_key", "api_secret"]
+
+[[rules]]
+id = "database-url-with-password"
+description = "Database URL with an embedded password"
+regex = '''(?i)(postgres(ql)?(\+asyncpg)?|mysql)://[^:\s/]+:([^@\s]{3,})@'''
+secretGroup = 4
+keywords = ["postgres", "mysql"]
+
+[allowlist]
+description = "Placeholders, test fixtures and local-dev defaults that are not real secrets"
+paths = [
+  '''\.env\.example$''',
+  '''^tests/''',
+  '''conftest\.py$''',
+]
+regexes = [
+  '''change-me''',
+  '''changeme''',
+  '''<[A-Za-z_\-]+>''',
+  '''\$\{[A-Z_]+\}''',
+  '''\$auth\.[a-z_]+''',
+  '''REDACTED''',
+  '''admin123''',
+  '''example''',
+]

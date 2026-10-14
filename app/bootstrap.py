@@ -20,13 +20,19 @@ US_ENDPOINT_DEFAULT = "http://dev.usbooking.org/us/UnitedSolutions"
 
 
 def _us_auth(soap: dict) -> dict:
-    """Credentials + SOAP operation template for a United Solutions provider row."""
+    """Credentials + SOAP operation template for a United Solutions provider row.
+
+    Credentials come only from the environment (US_USER_ID, US_PASSWORD,
+    US_AGENCY_ID, US_CLIENT_IP) or are entered later in the admin console.
+    They are never hardcoded in source.
+    """
+    user_id = (settings.us_user_id or "").strip()
     return {
-        "user_id": "REDACTED",
-        "password": "REDACTED",
-        "agency_id": "REDACTED",
-        "client_ip": "REDACTED",
-        "endpoint": US_ENDPOINT_DEFAULT,
+        "user_id": user_id,
+        "password": (settings.us_password or "").strip(),
+        "agency_id": (settings.us_agency_id or "").strip(),
+        "client_ip": (settings.us_client_ip or user_id).strip(),
+        "endpoint": (settings.us_endpoint or US_ENDPOINT_DEFAULT).strip(),
         "soap": {"namespace": US_SOAP_NS, **soap},
     }
 

@@ -4,12 +4,32 @@ __pycache__/
 *.so
 .Python
 .env
+.env.*
+!.env.example
 .venv/
 venv/
 ENV/
 env/
 *.db
+*.db-journal
+*.sqlite
 *.sqlite3
+*.bak
+*.dump
+*.sql.gz
+
+# Secrets and supplier material: never in git
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+supplier-docs/
+*.pdf
+
+# Agency kits and build outputs (may contain keys or samples)
+*.zip
+outputs/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
